@@ -15,6 +15,14 @@ include_directories( ${SDL2_INCLUDE_DIRS})
 include_directories( ${SDL2_IMAGE_INCLUDE_DIRS})
 include_directories( ${SDL2_TTF_INCLUDE_DIRS})
 
-add_executable(BrickBreaker main.c)
+add_executable(BrickBreaker main.c
+        menu.c
+        menu.h
+        game.c
+        game.h
+        history.c
+        history.h
+        utils.c
+        utils.h)
 
 target_link_libraries(BrickBreaker ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
