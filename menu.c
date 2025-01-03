@@ -5,8 +5,6 @@
 #include "menu.h"
 #include "game.h"
 #include "history.h"
-#include "help.h"
-#include "settings.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
