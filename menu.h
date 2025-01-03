@@ -11,6 +11,6 @@
 
 int displayMenu(SDL_Renderer *renderer);
 
-void displaySettingsMenu(SDL_Renderer *renderer);
+int displaySettingsMenu(SDL_Renderer *renderer);
 
 #endif //MENU_H
