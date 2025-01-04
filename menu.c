@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <windows.h>
 
 
 int displayMenu(SDL_Renderer* renderer){
@@ -132,6 +133,44 @@ int displayMenu(SDL_Renderer* renderer){
         .h = 226,
     };
 
+    SDL_Surface* iconSurface = IMG_Load("resources/assets/img/icons/coding.png");
+
+    if (!iconSurface) {
+        printf("Failed to load icon image: %s\n", IMG_GetError());
+        return -1;
+    }
+
+    SDL_Texture* iconTexture = SDL_CreateTextureFromSurface(renderer, iconSurface);
+    SDL_FreeSurface(iconSurface);
+
+    if (!iconTexture) {
+        printf("Failed to create icon texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+    SDL_Surface* textSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_FreeSurface(textSurface);
+
+    if (!textTexture) {
+        printf("Failed to create text texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Rect iconRect = {
+        .x = 1280 - 64 - 20, // 10 pixels padding from the right
+        .y = 720 - 64 - 20,  // 10 pixels padding from the bottom
+        .w = 64,
+        .h = 64,
+    };
+    SDL_Rect textRect = {
+        .x = iconRect.x - textSurface->w - 10, // 10 pixels padding from the icon
+        .y = iconRect.y + (iconRect.h - textSurface->h) / 2,
+        .w = textSurface->w,
+        .h = textSurface->h
+    };
+
     while (true) {
 
         SDL_Event event;
@@ -172,6 +211,9 @@ int displayMenu(SDL_Renderer* renderer){
         SDL_RenderCopy(renderer, settings_button_texture, NULL, &optionsButtonRect);
 
         SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
+
+        SDL_RenderCopy(renderer, iconTexture, NULL, &iconRect);
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
         SDL_RenderPresent(renderer);
     }
