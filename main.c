@@ -32,10 +32,24 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+    SDL_Surface* cursorSurface = SDL_LoadBMP("resources/assets/img/other/cursor.bmp");
+
+    if (!cursorSurface) {
+        printf("Erreur de chargement du curseur : %s\n", SDL_GetError());
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    SDL_Cursor* customCursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
+
+    SDL_SetCursor(customCursor);
+
     displayMenu(renderer);
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return EXIT_SUCCESS;
 }
