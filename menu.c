@@ -133,42 +133,119 @@ int displayMenu(SDL_Renderer* renderer){
         .h = 226,
     };
 
-    SDL_Surface* iconSurface = IMG_Load("resources/assets/img/icons/coding.png");
+    SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
 
-    if (!iconSurface) {
-        printf("Failed to load icon image: %s\n", IMG_GetError());
+    if (!iconDevSurface) {
+        printf("Failed to load dev icon image: %s\n", IMG_GetError());
         return -1;
     }
 
-    SDL_Texture* iconTexture = SDL_CreateTextureFromSurface(renderer, iconSurface);
-    SDL_FreeSurface(iconSurface);
+    SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
+    SDL_FreeSurface(iconDevSurface);
 
-    if (!iconTexture) {
-        printf("Failed to create icon texture: %s\n", SDL_GetError());
+    if (!iconDevTexture) {
+        printf("Failed to create dev icon texture: %s\n", SDL_GetError());
         return -1;
     }
 
-    TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
-    SDL_Surface* textSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_FreeSurface(textSurface);
+    TTF_Font* footerRightFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+    SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerRightFont, "created by zenta ", textColor);
+    SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
+    SDL_FreeSurface(textCreatorSurface);
 
-    if (!textTexture) {
-        printf("Failed to create text texture: %s\n", SDL_GetError());
+    if (!textCreatorTexture) {
+        printf("Failed to create creator text texture: %s\n", SDL_GetError());
         return -1;
     }
 
-    SDL_Rect iconRect = {
+    SDL_Rect iconDevRect = {
         .x = 1280 - 64 - 20, // 10 pixels padding from the right
         .y = 720 - 64 - 20,  // 10 pixels padding from the bottom
         .w = 64,
         .h = 64,
     };
-    SDL_Rect textRect = {
-        .x = iconRect.x - textSurface->w - 10, // 10 pixels padding from the icon
-        .y = iconRect.y + (iconRect.h - textSurface->h) / 2,
-        .w = textSurface->w,
-        .h = textSurface->h
+    SDL_Rect textCreatorRect = {
+        .x = iconDevRect.x - textCreatorSurface->w - 10, // 10 pixels padding from the icon
+        .y = iconDevRect.y + (iconDevRect.h - textCreatorSurface->h) / 2,
+        .w = textCreatorSurface->w,
+        .h = textCreatorSurface->h
+    };
+
+    SDL_Surface* githubButtonSurface = IMG_Load("resources/assets/img/buttons/github_button.png");
+
+    if (!githubButtonSurface) {
+        printf("Failed to load GitHub icon image: %s\n", IMG_GetError());
+        return -1;
+    }
+
+    SDL_Texture* githubButtonTexture = SDL_CreateTextureFromSurface(renderer, githubButtonSurface);
+    SDL_FreeSurface(githubButtonSurface);
+
+    if (!githubButtonTexture) {
+        printf("Failed to create GitHub button texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    TTF_Font* footerLeftFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+    SDL_Surface* githubTextSurface = TTF_RenderText_Blended(footerLeftFont, "click on me", textColor);
+    SDL_Texture* githubTextTexture = SDL_CreateTextureFromSurface(renderer, githubTextSurface);
+    SDL_FreeSurface(githubTextSurface);
+
+    if (!githubTextTexture) {
+        printf("Failed to create GitHub text texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Rect githubButtonRect = {
+        .x = 20, // 20 pixels padding from the left
+        .y = 720 - 64 - 20,  // 20 pixels padding from the bottom
+        .w = 64,
+        .h = 64,
+    };
+
+    SDL_Rect githubTextRect = {
+        .x = githubButtonRect.x + githubButtonRect.w + 10, // 10 pixels padding from the icon
+        .y = githubButtonRect.y + (githubButtonRect.h - githubTextSurface->h) / 2, // Vertically center the text with the icon
+        .w = githubTextSurface->w,
+        .h = githubTextSurface->h
+    };
+
+    SDL_Surface* helpButtonSurface = IMG_Load("resources/assets/img/buttons/help_button.png");
+
+    if (!helpButtonSurface) {
+        printf("Failed to load help button image: %s\n", IMG_GetError());
+        return -1;
+    }
+
+    SDL_Texture* helpButtonTexture = SDL_CreateTextureFromSurface(renderer, helpButtonSurface);
+    SDL_FreeSurface(helpButtonSurface);
+
+    if (!helpButtonTexture) {
+        printf("Failed to create help button texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerLeftFont, "Need more help ?", textColor);
+    SDL_Texture* helpTextTexture = SDL_CreateTextureFromSurface(renderer, helpTextSurface);
+    SDL_FreeSurface(helpTextSurface);
+
+    if (!helpTextTexture) {
+        printf("Failed to create help text texture: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Rect helpButtonRect = {
+        .x = (githubTextRect.x + textCreatorRect.x) / 2 - 75, // Center between GitHub text and "created by zenta" text
+        .y = 720 - 64 - 20,  // 20 pixels padding from the bottom
+        .w = 64,
+        .h = 64,
+    };
+
+    SDL_Rect helpTextRect = {
+        .x = helpButtonRect.x + helpButtonRect.w + 10, // 10 pixels padding from the help button
+        .y = helpButtonRect.y + (helpButtonRect.h - helpTextSurface->h) / 2, // Vertically center the text with the help button
+        .w = helpTextSurface->w,
+        .h = helpTextSurface->h
     };
 
     while (true) {
@@ -196,6 +273,12 @@ int displayMenu(SDL_Renderer* renderer){
                 } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
 
                     return 0;
+
+                } else if (SDL_PointInRect(&mousePoint, &githubButtonRect) || SDL_PointInRect(&mousePoint, &githubTextRect)) {
+                    ShellExecute(0, 0, "https://github.com/devZenta/BrickBreaker", 0, 0, SW_SHOW);
+
+                } else if (SDL_PointInRect(&mousePoint, &helpButtonRect)) {
+
                 }
             }
         }
@@ -212,14 +295,18 @@ int displayMenu(SDL_Renderer* renderer){
 
         SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
 
-        SDL_RenderCopy(renderer, iconTexture, NULL, &iconRect);
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-
+        SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
+        SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
+        SDL_RenderCopy(renderer, githubButtonTexture, NULL, &githubButtonRect);
+        SDL_RenderCopy(renderer, githubTextTexture, NULL, &githubTextRect);
+        SDL_RenderCopy(renderer, helpButtonTexture, NULL, &helpButtonRect);
+        SDL_RenderCopy(renderer, helpTextTexture, NULL, &helpTextRect);
         SDL_RenderPresent(renderer);
     }
 }
 
 int selectedDifficulty = 1;
+int volumeEnabled = 1;
 
 int displaySettingsMenu(SDL_Renderer* renderer) {
 
@@ -362,9 +449,9 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         .h = 128,
     };
 
-    TTF_Font* instructionTextFont = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 32);
+    TTF_Font* instructionsTextFont = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 32);
 
-    SDL_Surface* chooseDifficultySurface = TTF_RenderText_Blended(instructionTextFont, "Please select difficulty :", textColor);
+    SDL_Surface* chooseDifficultySurface = TTF_RenderText_Blended(instructionsTextFont, "Please select difficulty :", textColor);
     SDL_Texture* chooseDifficultyTexture = SDL_CreateTextureFromSurface(renderer, chooseDifficultySurface);
     SDL_FreeSurface(chooseDifficultySurface);
 
@@ -456,6 +543,42 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Rect mediumCheckboxRect = { .x = 550, .y = 500, .w = 24, .h = 24 };
     SDL_Rect hardCheckboxRect = { .x = 935, .y = 500, .w = 24, .h = 24 };
 
+    SDL_Surface* volumeOnSurface = IMG_Load("resources/assets/img/buttons/volume_on_button.png");
+    SDL_Surface* volumeOffSurface = IMG_Load("resources/assets/img/buttons/volume_off_button.png");
+
+    if (!volumeOnSurface || !volumeOffSurface) {
+        printf("Failed to load volume button images: %s\n", IMG_GetError());
+        return -1;
+    }
+
+    SDL_Texture* volumeOnTexture = SDL_CreateTextureFromSurface(renderer, volumeOnSurface);
+    SDL_Texture* volumeOffTexture = SDL_CreateTextureFromSurface(renderer, volumeOffSurface);
+
+    SDL_FreeSurface(volumeOnSurface);
+    SDL_FreeSurface(volumeOffSurface);
+
+    if (!volumeOnTexture || !volumeOffTexture) {
+        printf("Failed to create volume button textures: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Surface* enableVolumeSurface = TTF_RenderText_Blended(instructionsTextFont, "Active volume :", textColor);
+    SDL_Surface* disableVolumeSurface = TTF_RenderText_Blended(instructionsTextFont, "Muted volume :", textColor);
+
+    SDL_Texture* enableVolumeTexture = SDL_CreateTextureFromSurface(renderer, enableVolumeSurface);
+    SDL_Texture* disableVolumeTexture = SDL_CreateTextureFromSurface(renderer, disableVolumeSurface);
+
+    SDL_FreeSurface(enableVolumeSurface);
+    SDL_FreeSurface(disableVolumeSurface);
+
+    if (!enableVolumeTexture || !disableVolumeTexture) {
+        printf("Failed to create volume text textures: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    SDL_Rect volumeTextRect = { .x = 50, .y = 624, .w = enableVolumeSurface->w, .h = enableVolumeSurface->h };
+    SDL_Rect volumeButtonRect = { .x = volumeTextRect.x + volumeTextRect.w + 20, .y = 612, .w = 64, .h = 64 };
+
     while (true) {
 
         SDL_Event event;
@@ -485,6 +608,10 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
                 } else if (SDL_PointInRect(&mousePoint, &backButtonRect)) {
 
                     return displayMenu(renderer);
+
+                } else if (SDL_PointInRect(&mousePoint, &volumeButtonRect)) {
+
+                    volumeEnabled = !volumeEnabled;
                 }
             }
         }
@@ -509,6 +636,9 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, easyTextTexture, NULL, &easyTextRect);
         SDL_RenderCopy(renderer, mediumTextTexture, NULL, &mediumTextRect);
         SDL_RenderCopy(renderer, hardTextTexture, NULL, &hardTextRect);
+
+        SDL_RenderCopy(renderer, volumeEnabled ? enableVolumeTexture : disableVolumeTexture, NULL, &volumeTextRect);
+        SDL_RenderCopy(renderer, volumeEnabled ? volumeOnTexture : volumeOffTexture, NULL, &volumeButtonRect);
 
         SDL_RenderPresent(renderer);
     }

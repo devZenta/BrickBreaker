@@ -24,6 +24,8 @@ add_executable(BrickBreaker main.c
         history.h
         utils.c
         utils.h
+        menu_settings.c
+        menu_settings.h
 )
 
 target_link_libraries(BrickBreaker ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
