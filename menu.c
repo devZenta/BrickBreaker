@@ -4,7 +4,6 @@
 
 #include "menu.h"
 #include "game.h"
-#include "history.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -115,22 +114,22 @@ int displayMenu(SDL_Renderer* renderer){
     SDL_Rect playButtonRect = {
         .x = 128,
         .y = 232,
-        .w = 256,
-        .h = 256,
+        .w = 226,
+        .h = 226,
     };
 
     SDL_Rect optionsButtonRect = {
         .x = 512,
         .y = 232,
-        .w = 256,
-        .h = 256,
+        .w = 226,
+        .h = 226,
     };
 
     SDL_Rect exitButtonRect = {
         .x = 896,
         .y = 232,
-        .w = 256,
-        .h = 256,
+        .w = 226,
+        .h = 226,
     };
 
     while (true) {
@@ -150,9 +149,6 @@ int displayMenu(SDL_Renderer* renderer){
                 if (SDL_PointInRect(&mousePoint, &playButtonRect)) {
 
                     // game(renderer);
-
-                    SDL_RenderClear(renderer);
-                    SDL_RenderCopy(renderer, texture, NULL, NULL);
 
                 } else if (SDL_PointInRect(&mousePoint, &optionsButtonRect)) {
 
@@ -181,7 +177,7 @@ int displayMenu(SDL_Renderer* renderer){
     }
 }
 
-int selectedDifficulty = 0;
+int selectedDifficulty = 1;
 
 int displaySettingsMenu(SDL_Renderer* renderer) {
 
@@ -395,6 +391,29 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         .h = 128,
     };*/
 
+    SDL_Surface* checkboxUncheckedSurface = IMG_Load("resources/assets/img/icons/checkbox_unchecked.png");
+    SDL_Surface* checkboxCheckedSurface = IMG_Load("resources/assets/img/icons/checkbox_checked.png");
+
+    if (!checkboxUncheckedSurface || !checkboxCheckedSurface) {
+        printf("Failed to load checkbox images: %s\n", IMG_GetError());
+        return -1;
+    }
+
+    SDL_Texture* checkboxUncheckedTexture = SDL_CreateTextureFromSurface(renderer, checkboxUncheckedSurface);
+    SDL_Texture* checkboxCheckedTexture = SDL_CreateTextureFromSurface(renderer, checkboxCheckedSurface);
+    SDL_FreeSurface(checkboxUncheckedSurface);
+    SDL_FreeSurface(checkboxCheckedSurface);
+
+    if (!checkboxUncheckedTexture || !checkboxCheckedTexture) {
+        printf("Failed to create checkbox textures: %s\n", SDL_GetError());
+        return -1;
+    }
+
+    // Define checkbox rectangles
+    SDL_Rect easyCheckboxRect = { .x = 200, .y = 500, .w = 24, .h = 24 };
+    SDL_Rect mediumCheckboxRect = { .x = 550, .y = 500, .w = 24, .h = 24 };
+    SDL_Rect hardCheckboxRect = { .x = 935, .y = 500, .w = 24, .h = 24 };
+
     while (true) {
 
         SDL_Event event;
@@ -411,15 +430,15 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
                 if (SDL_PointInRect(&mousePoint, &easyLevelRect)) {
 
-                    //difficulty = 1;
+                    selectedDifficulty = 1;
 
                 } else if (SDL_PointInRect(&mousePoint, &mediumLevelRect)) {
 
-                    //difficulty = 2;
+                    selectedDifficulty = 2;
 
                 } else if (SDL_PointInRect(&mousePoint, &hardLevelRect)) {
 
-                    //difficulty = 3;
+                    selectedDifficulty = 3;
 
                 } else if (SDL_PointInRect(&mousePoint, &backButtonRect)) {
 
@@ -440,6 +459,10 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
 
         SDL_RenderCopy(renderer, chooseDifficultyTexture, NULL, &chooseDifficultyRect);
+
+        SDL_RenderCopy(renderer, selectedDifficulty == 1 ? checkboxCheckedTexture : checkboxUncheckedTexture, NULL, &easyCheckboxRect);
+        SDL_RenderCopy(renderer, selectedDifficulty == 2 ? checkboxCheckedTexture : checkboxUncheckedTexture, NULL, &mediumCheckboxRect);
+        SDL_RenderCopy(renderer, selectedDifficulty == 3 ? checkboxCheckedTexture : checkboxUncheckedTexture, NULL, &hardCheckboxRect);
 
         SDL_RenderCopy(renderer, easyTextTexture, NULL, &easyTextRect);
         SDL_RenderCopy(renderer, mediumTextTexture, NULL, &mediumTextRect);

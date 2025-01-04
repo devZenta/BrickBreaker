@@ -6,8 +6,6 @@
 #define MENU_H
 
 #include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
 
 int displayMenu(SDL_Renderer *renderer);
 
