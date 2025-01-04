@@ -3,8 +3,8 @@
 //
 
 #include "menu.h"
-#include "game.h"
 #include "menu_settings.h"
+#include "game.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -29,7 +29,12 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Color textColor = {
+        255,
+        255,
+        255,
+        255
+    };
 
     SDL_Surface* titleSurface = TTF_RenderText_Blended(font, "Brick Breaker", textColor);
 
@@ -83,6 +88,13 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
+    SDL_Rect playButtonRect = {
+        .x = 128,
+        .y = 232,
+        .w = 226,
+        .h = 226
+    };
+
     SDL_Surface *settings_button_surface = IMG_Load("resources/assets/img/buttons/settings_button.png");
 
     if (!settings_button_surface) {
@@ -97,6 +109,13 @@ int displayMenu(SDL_Renderer* renderer){
         printf("Failed to create settings button texture: %s\n", SDL_GetError());
         return -1;
     }
+
+    SDL_Rect settingsButtonRect = {
+        .x = 512,
+        .y = 232,
+        .w = 226,
+        .h = 226
+    };
 
     SDL_Surface *exit_button_surface = IMG_Load("resources/assets/img/buttons/exit_button.png");
 
@@ -113,25 +132,11 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Rect playButtonRect = {
-        .x = 128,
-        .y = 232,
-        .w = 226,
-        .h = 226,
-    };
-
-    SDL_Rect optionsButtonRect = {
-        .x = 512,
-        .y = 232,
-        .w = 226,
-        .h = 226,
-    };
-
     SDL_Rect exitButtonRect = {
         .x = 896,
         .y = 232,
         .w = 226,
-        .h = 226,
+        .h = 226
     };
 
     SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
@@ -149,8 +154,27 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    TTF_Font* footerRightFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
-    SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerRightFont, "created by zenta ", textColor);
+    SDL_Rect iconDevRect = {
+        .x = 1280 - 64 - 20,
+        .y = 720 - 64 - 20,
+        .w = 64,
+        .h = 64
+    };
+
+    TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+
+    if (!footerFont) {
+        printf("Failed to load footerFont: %s\n", TTF_GetError());
+        return -1;
+    }
+
+    SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
+
+    if (!textCreatorSurface) {
+        printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
+        return -1;
+    }
+
     SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
     SDL_FreeSurface(textCreatorSurface);
 
@@ -159,14 +183,8 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Rect iconDevRect = {
-        .x = 1280 - 64 - 20, // 10 pixels padding from the right
-        .y = 720 - 64 - 20,  // 10 pixels padding from the bottom
-        .w = 64,
-        .h = 64,
-    };
     SDL_Rect textCreatorRect = {
-        .x = iconDevRect.x - textCreatorSurface->w - 10, // 10 pixels padding from the icon
+        .x = iconDevRect.x - textCreatorSurface->w - 10,
         .y = iconDevRect.y + (iconDevRect.h - textCreatorSurface->h) / 2,
         .w = textCreatorSurface->w,
         .h = textCreatorSurface->h
@@ -187,8 +205,20 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    TTF_Font* footerLeftFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
-    SDL_Surface* githubTextSurface = TTF_RenderText_Blended(footerLeftFont, "click on me", textColor);
+    SDL_Rect githubButtonRect = {
+        .x = 20,
+        .y = 720 - 64 - 20,
+        .w = 64,
+        .h = 64
+    };
+
+    SDL_Surface* githubTextSurface = TTF_RenderText_Blended(footerFont, "click on me", textColor);
+
+    if (!githubTextSurface) {
+        printf("Failed to load githubTextSurface: %s\n", IMG_GetError());
+        return -1;
+    }
+
     SDL_Texture* githubTextTexture = SDL_CreateTextureFromSurface(renderer, githubTextSurface);
     SDL_FreeSurface(githubTextSurface);
 
@@ -197,16 +227,9 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Rect githubButtonRect = {
-        .x = 20, // 20 pixels padding from the left
-        .y = 720 - 64 - 20,  // 20 pixels padding from the bottom
-        .w = 64,
-        .h = 64,
-    };
-
     SDL_Rect githubTextRect = {
-        .x = githubButtonRect.x + githubButtonRect.w + 10, // 10 pixels padding from the icon
-        .y = githubButtonRect.y + (githubButtonRect.h - githubTextSurface->h) / 2, // Vertically center the text with the icon
+        .x = githubButtonRect.x + githubButtonRect.w + 10,
+        .y = githubButtonRect.y + (githubButtonRect.h - githubTextSurface->h) / 2,
         .w = githubTextSurface->w,
         .h = githubTextSurface->h
     };
@@ -226,7 +249,20 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerLeftFont, "Need more help ?", textColor);
+    SDL_Rect helpButtonRect = {
+        .x = (githubTextRect.x + textCreatorRect.x) / 2 - 75,
+        .y = 720 - 64 - 20,
+        .w = 64,
+        .h = 64
+    };
+
+    SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerFont, "Need more help ?", textColor);
+
+    if (!helpTextSurface) {
+        printf("Failed to load helpTextSurface: %s\n", IMG_GetError());
+        return -1;
+    }
+
     SDL_Texture* helpTextTexture = SDL_CreateTextureFromSurface(renderer, helpTextSurface);
     SDL_FreeSurface(helpTextSurface);
 
@@ -235,16 +271,9 @@ int displayMenu(SDL_Renderer* renderer){
         return -1;
     }
 
-    SDL_Rect helpButtonRect = {
-        .x = (githubTextRect.x + textCreatorRect.x) / 2 - 75, // Center between GitHub text and "created by zenta" text
-        .y = 720 - 64 - 20,  // 20 pixels padding from the bottom
-        .w = 64,
-        .h = 64,
-    };
-
     SDL_Rect helpTextRect = {
-        .x = helpButtonRect.x + helpButtonRect.w + 10, // 10 pixels padding from the help button
-        .y = helpButtonRect.y + (helpButtonRect.h - helpTextSurface->h) / 2, // Vertically center the text with the help button
+        .x = helpButtonRect.x + helpButtonRect.w + 10,
+        .y = helpButtonRect.y + (helpButtonRect.h - helpTextSurface->h) / 2,
         .w = helpTextSurface->w,
         .h = helpTextSurface->h
     };
@@ -267,7 +296,7 @@ int displayMenu(SDL_Renderer* renderer){
 
                     // game(renderer);
 
-                } else if (SDL_PointInRect(&mousePoint, &optionsButtonRect)) {
+                } else if (SDL_PointInRect(&mousePoint, &settingsButtonRect)) {
 
                     displaySettingsMenu(renderer);
 
@@ -276,6 +305,7 @@ int displayMenu(SDL_Renderer* renderer){
                     return 0;
 
                 } else if (SDL_PointInRect(&mousePoint, &githubButtonRect) || SDL_PointInRect(&mousePoint, &githubTextRect)) {
+
                     ShellExecute(0, 0, "https://github.com/devZenta/BrickBreaker", 0, 0, SW_SHOW);
 
                 } else if (SDL_PointInRect(&mousePoint, &helpButtonRect)) {
@@ -291,17 +321,18 @@ int displayMenu(SDL_Renderer* renderer){
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
 
         SDL_RenderCopy(renderer, play_button_texture, NULL, &playButtonRect);
-
-        SDL_RenderCopy(renderer, settings_button_texture, NULL, &optionsButtonRect);
-
+        SDL_RenderCopy(renderer, settings_button_texture, NULL, &settingsButtonRect);
         SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
 
         SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
+
         SDL_RenderCopy(renderer, githubButtonTexture, NULL, &githubButtonRect);
         SDL_RenderCopy(renderer, githubTextTexture, NULL, &githubTextRect);
+
         SDL_RenderCopy(renderer, helpButtonTexture, NULL, &helpButtonRect);
         SDL_RenderCopy(renderer, helpTextTexture, NULL, &helpTextRect);
+
         SDL_RenderPresent(renderer);
     }
 }
