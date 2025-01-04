@@ -4,6 +4,7 @@
 
 #include "menu_settings.h"
 #include "menu.h"
+#include "utils.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -13,11 +14,11 @@
 #include <stdbool.h>
 #include <windows.h>
 
-
-int selectedDifficulty = 1;
-int volumeEnabled = 1;
-
 int displaySettingsMenu(SDL_Renderer* renderer) {
+
+    int selectedDifficulty, volume;
+
+    load_settings(&selectedDifficulty, &volume);
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
@@ -364,14 +365,17 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
                 if (SDL_PointInRect(&mousePoint, &easyLevelRect)) {
 
                     selectedDifficulty = 1;
+                    save_single_setting("difficulty", 1);
 
                 } else if (SDL_PointInRect(&mousePoint, &mediumLevelRect)) {
 
                     selectedDifficulty = 2;
+                    save_single_setting("difficulty", 2);
 
                 } else if (SDL_PointInRect(&mousePoint, &hardLevelRect)) {
 
                     selectedDifficulty = 3;
+                    save_single_setting("difficulty", 3);
 
                 } else if (SDL_PointInRect(&mousePoint, &backButtonRect)) {
 
@@ -379,7 +383,8 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
                 } else if (SDL_PointInRect(&mousePoint, &volumeButtonRect)) {
 
-                    volumeEnabled = !volumeEnabled;
+                    volume = !volume;
+                    save_single_setting("volume", volume);
                 }
             }
         }
@@ -405,8 +410,8 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, mediumTextTexture, NULL, &mediumTextRect);
         SDL_RenderCopy(renderer, hardTextTexture, NULL, &hardTextRect);
 
-        SDL_RenderCopy(renderer, volumeEnabled ? enableVolumeTexture : disableVolumeTexture, NULL, &volumeTextRect);
-        SDL_RenderCopy(renderer, volumeEnabled ? volumeOnTexture : volumeOffTexture, NULL, &volumeButtonRect);
+        SDL_RenderCopy(renderer, volume ? enableVolumeTexture : disableVolumeTexture, NULL, &volumeTextRect);
+        SDL_RenderCopy(renderer, volume ? volumeOnTexture : volumeOffTexture, NULL, &volumeButtonRect);
 
         SDL_RenderPresent(renderer);
     }
