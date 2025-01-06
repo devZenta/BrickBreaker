@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "menu_settings.h"
 #include "game.h"
+#include "menu_help.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -19,14 +20,12 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
-        return -1;
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
 
     if (!font) {
         printf("Failed to load font: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Color textColor = {
@@ -40,7 +39,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!titleSurface) {
         printf("Failed to create title surface: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
@@ -48,11 +46,10 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!titleTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect titleRect = {
-        .x = (1280 - titleSurface->w) / 2,
+        .x = (1280 - titleSurface->w) / 2 - 40,
         .y = 50,
         .w = titleSurface->w,
         .h = titleSurface->h
@@ -62,7 +59,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!background_menu) {
         printf("Failed to load background image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
@@ -70,14 +66,12 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!texture) {
         printf("Failed to create texture from surface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Surface *play_button_surface = IMG_Load("resources/assets/img/buttons/play_button.png");
 
     if (!play_button_surface) {
         printf("Failed to load play button image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *play_button_texture = SDL_CreateTextureFromSurface(renderer, play_button_surface);
@@ -85,21 +79,19 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!play_button_texture) {
         printf("Failed to create play button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect playButtonRect = {
-        .x = 128,
-        .y = 232,
-        .w = 226,
-        .h = 226
+        .x = 520,
+        .y = 400,
+        .w = 170,
+        .h = 170
     };
 
     SDL_Surface *settings_button_surface = IMG_Load("resources/assets/img/buttons/settings_button.png");
 
     if (!settings_button_surface) {
         printf("Failed to load settings button image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *settings_button_texture = SDL_CreateTextureFromSurface(renderer, settings_button_surface);
@@ -107,21 +99,19 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!settings_button_texture) {
         printf("Failed to create settings button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect settingsButtonRect = {
-        .x = 512,
-        .y = 232,
-        .w = 226,
-        .h = 226
+        .x = 30,
+        .y = 30,
+        .w = 150,
+        .h = 150
     };
 
     SDL_Surface *exit_button_surface = IMG_Load("resources/assets/img/buttons/exit_button.png");
 
     if (!exit_button_surface) {
         printf("Failed to load exit button image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *exit_button_texture = SDL_CreateTextureFromSurface(renderer, exit_button_surface);
@@ -129,21 +119,19 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!exit_button_texture) {
         printf("Failed to create exit button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect exitButtonRect = {
-        .x = 896,
-        .y = 232,
-        .w = 226,
-        .h = 226
+        .x = 1280 - 226 - 10,
+        .y = -10,
+        .w = 212,
+        .h = 212
     };
 
     SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
 
     if (!iconDevSurface) {
         printf("Failed to load dev icon image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
@@ -151,7 +139,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!iconDevTexture) {
         printf("Failed to create dev icon texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect iconDevRect = {
@@ -165,14 +152,12 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!footerFont) {
         printf("Failed to load footerFont: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
 
     if (!textCreatorSurface) {
         printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
@@ -180,7 +165,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!textCreatorTexture) {
         printf("Failed to create creator text texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect textCreatorRect = {
@@ -194,7 +178,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubButtonSurface) {
         printf("Failed to load GitHub icon image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* githubButtonTexture = SDL_CreateTextureFromSurface(renderer, githubButtonSurface);
@@ -202,7 +185,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubButtonTexture) {
         printf("Failed to create GitHub button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect githubButtonRect = {
@@ -216,7 +198,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubTextSurface) {
         printf("Failed to load githubTextSurface: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* githubTextTexture = SDL_CreateTextureFromSurface(renderer, githubTextSurface);
@@ -224,7 +205,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubTextTexture) {
         printf("Failed to create GitHub text texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect githubTextRect = {
@@ -238,7 +218,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpButtonSurface) {
         printf("Failed to load help button image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* helpButtonTexture = SDL_CreateTextureFromSurface(renderer, helpButtonSurface);
@@ -246,7 +225,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpButtonTexture) {
         printf("Failed to create help button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect helpButtonRect = {
@@ -260,7 +238,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpTextSurface) {
         printf("Failed to load helpTextSurface: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* helpTextTexture = SDL_CreateTextureFromSurface(renderer, helpTextSurface);
@@ -268,7 +245,6 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpTextTexture) {
         printf("Failed to create help text texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect helpTextRect = {
@@ -278,7 +254,12 @@ int displayMenu(SDL_Renderer* renderer){
         .h = helpTextSurface->h
     };
 
-    while (true) {
+    SDL_bool quit = false;
+    bool game = false;
+    bool settings = false;
+    bool help = false;
+
+    while (!quit) {
 
         SDL_Event event;
 
@@ -294,11 +275,15 @@ int displayMenu(SDL_Renderer* renderer){
 
                 if (SDL_PointInRect(&mousePoint, &playButtonRect)) {
 
-                    // game(renderer);
+                    printf("Play clicked\n");
+                    game = true;
+                    break;
 
                 } else if (SDL_PointInRect(&mousePoint, &settingsButtonRect)) {
 
-                    displaySettingsMenu(renderer);
+                    printf("Settings clicked\n");
+                    settings = true;
+                    break;
 
                 } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
 
@@ -310,8 +295,25 @@ int displayMenu(SDL_Renderer* renderer){
 
                 } else if (SDL_PointInRect(&mousePoint, &helpButtonRect)) {
 
+                    printf("Help clicked\n");
+                    help = true;
+                    break;
                 }
             }
+        }
+
+        if(game){
+            //displayGame(renderer);
+            quit = true;
+            return 1;
+        } else if(settings){
+            displaySettingsMenu(renderer);
+            quit = true;
+            return 1;
+        } else if (help){
+            displayHelpMenu(renderer);
+            quit = true;
+            return 1;
         }
 
         SDL_RenderClear(renderer);

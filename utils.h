@@ -5,10 +5,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-void ensure_config_directory();
+#include <SDL.h>
 
-void save_single_setting(const char *key_to_update, int new_value);
-
-void load_settings(int *difficulty, int *volume);
+SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* path);
 
 #endif //UTILS_H

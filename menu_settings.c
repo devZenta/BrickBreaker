@@ -4,7 +4,7 @@
 
 #include "menu_settings.h"
 #include "menu.h"
-#include "utils.h"
+#include "data.h"
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -22,14 +22,12 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
-        return -1;
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
 
     if (!font) {
         printf("Failed to load font: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
@@ -38,7 +36,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!titleSurface) {
         printf("Failed to create title surface: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
@@ -46,11 +43,10 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!titleTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect titleRect = {
-        .x = (1280 - titleSurface->w) / 2,
+        .x = (1280 - titleSurface->w) / 2 - 20,
         .y = 50,
         .w = titleSurface->w,
         .h = titleSurface->h
@@ -60,7 +56,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!background_menu) {
         printf("Failed to load background image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
@@ -68,14 +63,12 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!texture) {
         printf("Failed to create texture from surface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Surface *easy_level_surface = IMG_Load("resources/assets/img/levels/simple_level.png");
 
     if (!easy_level_surface) {
         printf("Failed to load easy level image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *easy_level_texture = SDL_CreateTextureFromSurface(renderer, easy_level_surface);
@@ -83,7 +76,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!easy_level_texture) {
         printf("Failed to create easy level texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect easyLevelRect = {
@@ -97,7 +89,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!medium_level_surface) {
         printf("Failed to load medium level image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *medium_level_texture = SDL_CreateTextureFromSurface(renderer, medium_level_surface);
@@ -105,7 +96,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!medium_level_texture) {
         printf("Failed to create medium level texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect mediumLevelRect = {
@@ -119,7 +109,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!hard_level_surface) {
         printf("Failed to load hard level image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *hard_level_texture = SDL_CreateTextureFromSurface(renderer, hard_level_surface);
@@ -127,7 +116,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!hard_level_texture) {
         printf("Failed to create hard level texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect hardLevelRect = {
@@ -141,7 +129,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!back_button_surface) {
         printf("Failed to load back button image: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture *back_button_texture = SDL_CreateTextureFromSurface(renderer, back_button_surface);
@@ -149,7 +136,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!back_button_texture) {
         printf("Failed to create back button texture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect backButtonRect = {
@@ -163,14 +149,12 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!instructionsTextFont) {
         printf("Failed to load instructionsTextFont: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Surface* chooseDifficultySurface = TTF_RenderText_Blended(instructionsTextFont, "Please select difficulty :", textColor);
 
     if (!chooseDifficultySurface) {
         printf("Failed to create chooseDifficultySurface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Texture* chooseDifficultyTexture = SDL_CreateTextureFromSurface(renderer, chooseDifficultySurface);
@@ -178,7 +162,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!chooseDifficultyTexture) {
         printf("Failed to create chooseDifficultyTexture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect chooseDifficultyRect = {
@@ -192,14 +175,12 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!textLevelFont) {
         printf("Failed to load textLevelFont: %s\n", TTF_GetError());
-        return -1;
     }
 
     SDL_Surface* easyTextSurface = TTF_RenderText_Blended(textLevelFont, "Easy", textColor);
 
     if (!easyTextSurface) {
         printf("Failed to create easyTextSurface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Texture* easyTextTexture = SDL_CreateTextureFromSurface(renderer, easyTextSurface);
@@ -207,7 +188,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!easyTextTexture) {
         printf("Failed to create easyTextTexture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect easyTextRect = {
@@ -221,7 +201,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!mediumTextSurface) {
         printf("Failed to create mediumTextSurface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Texture* mediumTextTexture = SDL_CreateTextureFromSurface(renderer, mediumTextSurface);
@@ -229,7 +208,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!mediumTextTexture) {
         printf("Failed to create mediumTextTexture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect mediumTextRect = {
@@ -243,7 +221,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!hardTextSurface) {
         printf("Failed to create hardTextSurface: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Texture* hardTextTexture = SDL_CreateTextureFromSurface(renderer, hardTextSurface);
@@ -251,7 +228,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!hardTextTexture) {
         printf("Failed to create hardTextTexture: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect hardTextRect = {
@@ -266,7 +242,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!checkboxUncheckedSurface || !checkboxCheckedSurface) {
         printf("Failed to load checkbox images: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* checkboxUncheckedTexture = SDL_CreateTextureFromSurface(renderer, checkboxUncheckedSurface);
@@ -277,7 +252,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!checkboxUncheckedTexture || !checkboxCheckedTexture) {
         printf("Failed to create checkbox textures: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect easyCheckboxRect = {
@@ -306,7 +280,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!volumeOnSurface || !volumeOffSurface) {
         printf("Failed to load volume button images: %s\n", IMG_GetError());
-        return -1;
     }
 
     SDL_Texture* volumeOnTexture = SDL_CreateTextureFromSurface(renderer, volumeOnSurface);
@@ -317,7 +290,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!volumeOnTexture || !volumeOffTexture) {
         printf("Failed to create volume button textures: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Surface* enableVolumeSurface = TTF_RenderText_Blended(instructionsTextFont, "Active volume :", textColor);
@@ -331,7 +303,6 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!enableVolumeTexture || !disableVolumeTexture) {
         printf("Failed to create volume text textures: %s\n", SDL_GetError());
-        return -1;
     }
 
     SDL_Rect volumeTextRect = {
@@ -348,15 +319,90 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         .h = 64
     };
 
-    while (true) {
+    SDL_Surface *exit_button_surface = IMG_Load("resources/assets/img/buttons/exit_button.png");
+
+    if (!exit_button_surface) {
+        printf("Failed to load exit button image: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture *exit_button_texture = SDL_CreateTextureFromSurface(renderer, exit_button_surface);
+    SDL_FreeSurface(exit_button_surface);
+
+    if (!exit_button_texture) {
+        printf("Failed to create exit button texture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect exitButtonRect = {
+        .x = 1280 - 226 - 10,
+        .y = -10,
+        .w = 212,
+        .h = 212
+    };
+
+    SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
+
+    if (!iconDevSurface) {
+        printf("Failed to load dev icon image: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
+    SDL_FreeSurface(iconDevSurface);
+
+    if (!iconDevTexture) {
+        printf("Failed to create dev icon texture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect iconDevRect = {
+        .x = 1280 - 64 - 20,
+        .y = 720 - 64 - 20,
+        .w = 64,
+        .h = 64
+    };
+
+    TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+
+    if (!footerFont) {
+        printf("Failed to load footerFont: %s\n", TTF_GetError());
+    }
+
+    SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
+
+    if (!textCreatorSurface) {
+        printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
+    SDL_FreeSurface(textCreatorSurface);
+
+    if (!textCreatorTexture) {
+        printf("Failed to create creator text texture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect textCreatorRect = {
+        .x = iconDevRect.x - textCreatorSurface->w - 10,
+        .y = iconDevRect.y + (iconDevRect.h - textCreatorSurface->h) / 2,
+        .w = textCreatorSurface->w,
+        .h = textCreatorSurface->h
+    };
+
+    SDL_bool quit = false;
+    bool leave = false;
+    bool back = false;
+
+    while (!quit) {
 
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
 
-            if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
+            if (event.type == SDL_QUIT) {
 
                 return 0;
+
+            } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+
+                leave = true;
+                break;
 
             } else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
 
@@ -364,29 +410,47 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
                 if (SDL_PointInRect(&mousePoint, &easyLevelRect)) {
 
+                    printf("Easy Level button clicked\n");
                     selectedDifficulty = 1;
                     save_single_setting("difficulty", 1);
 
                 } else if (SDL_PointInRect(&mousePoint, &mediumLevelRect)) {
 
+                    printf("Medium Level button clicked\n");
                     selectedDifficulty = 2;
                     save_single_setting("difficulty", 2);
 
                 } else if (SDL_PointInRect(&mousePoint, &hardLevelRect)) {
 
+                    printf("Hard Level button clicked\n");
                     selectedDifficulty = 3;
                     save_single_setting("difficulty", 3);
 
                 } else if (SDL_PointInRect(&mousePoint, &backButtonRect)) {
 
-                    return displayMenu(renderer);
+                    printf("Back button clicked\n");
+                    back = true;
 
                 } else if (SDL_PointInRect(&mousePoint, &volumeButtonRect)) {
 
                     volume = !volume;
                     save_single_setting("volume", volume);
+
+                } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
+
+                    return 0;
                 }
             }
+        }
+
+        if (leave) {
+            displayMenu(renderer);
+            quit = true;
+            return 1;
+        } else if (back) {
+            displayMenu(renderer);
+            quit = true;
+            return 1;
         }
 
         SDL_RenderClear(renderer);
@@ -397,6 +461,7 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, medium_level_texture, NULL, &mediumLevelRect);
         SDL_RenderCopy(renderer, hard_level_texture, NULL, &hardLevelRect);
         SDL_RenderCopy(renderer, back_button_texture, NULL, &backButtonRect);
+        SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
 
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
 
@@ -412,6 +477,9 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
         SDL_RenderCopy(renderer, volume ? enableVolumeTexture : disableVolumeTexture, NULL, &volumeTextRect);
         SDL_RenderCopy(renderer, volume ? volumeOnTexture : volumeOffTexture, NULL, &volumeButtonRect);
+
+        SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
+        SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
 
         SDL_RenderPresent(renderer);
     }
