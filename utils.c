@@ -3,13 +3,31 @@
 //
 
 #include "utils.h"
+#include "menu_settings.h"
+
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <direct.h>
+
+void ensure_config_directory() {
+
+#ifdef _WIN32
+
+    struct stat st = {0};
+
+    if (stat("config", &st) == -1) {
+        _mkdir("config");
+    }
+#endif
+}
 
 void save_single_setting(const char *key_to_update, int new_value) {
 
+    ensure_config_directory();
+
     int difficulty = 1, volume = 1;
-    FILE *file = fopen("settings.txt", "r");
+    FILE *file = fopen("config/settings.txt", "r");
 
     if (file != NULL) {
 
@@ -53,7 +71,7 @@ void save_single_setting(const char *key_to_update, int new_value) {
 
     }
 
-    file = fopen("settings.txt", "w");
+    file = fopen("config/settings.txt", "w");
 
     if (file != NULL) {
 
@@ -71,7 +89,9 @@ void save_single_setting(const char *key_to_update, int new_value) {
 
 void load_settings(int *difficulty, int *volume) {
 
-    FILE *file = fopen("settings.txt", "r");
+    ensure_config_directory();
+
+    FILE *file = fopen("config/settings.txt", "r");
 
     if (file != NULL) {
 
@@ -100,7 +120,7 @@ void load_settings(int *difficulty, int *volume) {
 
         printf("File not found. Creation of settings.txt with default parameters...\n");
 
-        file = fopen("settings.txt", "w");
+        file = fopen("config/settings.txt", "w");
 
         if (file != NULL) {
 
