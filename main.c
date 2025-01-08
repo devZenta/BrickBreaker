@@ -29,6 +29,8 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
+    SDL_RaiseWindow(window);
+
     SDL_Surface* cursorSurface = SDL_LoadBMP("resources/assets/img/other/cursor.bmp");
 
     if (!cursorSurface) {
@@ -41,6 +43,8 @@ int main(int argc, char **argv) {
     SDL_Cursor* customCursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
 
     SDL_SetCursor(customCursor);
+
+
 
     displayMenu(renderer);
 
