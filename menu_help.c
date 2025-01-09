@@ -20,23 +20,34 @@ int displayHelpMenu(SDL_Renderer* renderer) {
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
+    TTF_Font* subtitleFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 35);
+    TTF_Font* textFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 25);
 
-    if (!font) {
+    if (!font || !subtitleFont || !textFont) {
         printf("Failed to load font: %s\n", TTF_GetError());
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
 
     SDL_Surface* titleSurface = TTF_RenderText_Blended(font, "Help", textColor);
+    SDL_Surface* howToPlayTitleSurface = TTF_RenderText_Blended(subtitleFont, "How to Play", textColor);
+    SDL_Surface* followInstructionsTitleSurface = TTF_RenderText_Blended(subtitleFont, "Please follow these instructions", textColor);
+    SDL_Surface* doNotModifySurface = TTF_RenderText_Blended(textFont, "Please do not modify the settings file directly.", textColor);
 
-    if (!titleSurface) {
+    if (!titleSurface || !howToPlayTitleSurface || !followInstructionsTitleSurface || !doNotModifySurface) {
         printf("Failed to create title surface: %s\n", TTF_GetError());
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
+    SDL_Texture* howToPlayTitleTexture = SDL_CreateTextureFromSurface(renderer, howToPlayTitleSurface);
+    SDL_Texture* followInstructionsTitleTexture = SDL_CreateTextureFromSurface(renderer, followInstructionsTitleSurface);
+    SDL_Texture* doNotModifyTexture = SDL_CreateTextureFromSurface(renderer, doNotModifySurface);
     SDL_FreeSurface(titleSurface);
+    SDL_FreeSurface(howToPlayTitleSurface);
+    SDL_FreeSurface(followInstructionsTitleSurface);
+    SDL_FreeSurface(doNotModifySurface);
 
-    if (!titleTexture) {
+    if (!titleTexture || !howToPlayTitleTexture || !followInstructionsTitleTexture || !doNotModifyTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
     }
 
@@ -45,6 +56,20 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         .y = 50,
         .w = titleSurface->w,
         .h = titleSurface->h
+    };
+
+    SDL_Rect howToPlayTitleRect = {
+        .x = 260,
+        .y = 230,
+        .w = howToPlayTitleSurface->w,
+        .h = howToPlayTitleSurface->h
+    };
+
+    SDL_Rect followInstructionsTitleRect = {
+        .x = 255,
+        .y = 525,
+        .w = followInstructionsTitleSurface->w,
+        .h = followInstructionsTitleSurface->h
     };
 
     SDL_Surface *background_menu = IMG_Load("resources/assets/img/background/background_menu.jpg");
@@ -146,6 +171,40 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         .h = textCreatorSurface->h
     };
 
+    SDL_Surface* howToPlayIconSurface = IMG_Load("resources/assets/img/icons/howToPlay.png");
+    SDL_Surface* ruleIconSurface = IMG_Load("resources/assets/img/icons/pin.png");
+    SDL_Surface* followInstructionsIconSurface = IMG_Load("resources/assets/img/icons/danger.png");
+
+    if (!howToPlayIconSurface || !ruleIconSurface || !followInstructionsIconSurface) {
+        printf("Failed to load icon image: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* howToPlayIconTexture = SDL_CreateTextureFromSurface(renderer, howToPlayIconSurface);
+    SDL_Texture* ruleIconTexture = SDL_CreateTextureFromSurface(renderer, ruleIconSurface);
+    SDL_Texture* followInstructionsIconTexture = SDL_CreateTextureFromSurface(renderer, followInstructionsIconSurface);
+    SDL_FreeSurface(howToPlayIconSurface);
+    SDL_FreeSurface(ruleIconSurface);
+    SDL_FreeSurface(followInstructionsIconSurface);
+
+    if (!howToPlayIconTexture || !ruleIconTexture || !followInstructionsIconTexture) {
+        printf("Failed to create icon texture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect howToPlayIconRect = {
+        .x = 150,
+        .y = 200,
+        .w = 100,
+        .h = 100
+    };
+
+    SDL_Rect followInstructionsIconRect = {
+        .x = 160,
+        .y = 500,
+        .w = 80,
+        .h = 80
+    };
+
+
     SDL_bool quit = false;
     bool leave = false;
     bool back = false;
@@ -199,6 +258,12 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
 
         SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
+
+        SDL_RenderCopy(renderer, howToPlayTitleTexture, NULL, &howToPlayTitleRect);
+        SDL_RenderCopy(renderer, howToPlayIconTexture, NULL, &howToPlayIconRect);
+
+        SDL_RenderCopy(renderer, followInstructionsTitleTexture, NULL, &followInstructionsTitleRect);
+        SDL_RenderCopy(renderer, followInstructionsIconTexture, NULL, &followInstructionsIconRect);
 
         SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
