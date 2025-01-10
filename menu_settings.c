@@ -46,7 +46,7 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
     }
 
     SDL_Rect titleRect = {
-        .x = (1280 - titleSurface->w) / 2 - 20,
+        .x = (1280 - titleSurface->w) / 2 ,
         .y = 50,
         .w = titleSurface->w,
         .h = titleSurface->h
@@ -140,9 +140,9 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
     SDL_Rect backButtonRect = {
         .x = 10,
-        .y = 30,
-        .w = 128,
-        .h = 128
+        .y = 20,
+        .w = 148,
+        .h = 148
     };
 
     TTF_Font* instructionsTextFont = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 32);
@@ -333,10 +333,10 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
     }
 
     SDL_Rect exitButtonRect = {
-        .x = 1280 - 226 - 10,
-        .y = -10,
-        .w = 212,
-        .h = 212
+        .x = 1280 - 148 - 10,
+        .y = 20,
+        .w = 148,
+        .h = 148
     };
 
     SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");

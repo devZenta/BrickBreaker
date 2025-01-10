@@ -28,6 +28,7 @@ int displayHelpMenu(SDL_Renderer* renderer) {
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Color textColorBull = {0, 0, 0, 255};
 
     SDL_Surface* titleSurface = TTF_RenderText_Blended(font, "Help", textColor);
     SDL_Surface* howToPlayTitleSurface = TTF_RenderText_Blended(subtitleFont, "How to Play", textColor);
@@ -52,7 +53,7 @@ int displayHelpMenu(SDL_Renderer* renderer) {
     }
 
     SDL_Rect titleRect = {
-        .x = (1280 - titleSurface->w) / 2 - 45,
+        .x = (1280 - titleSurface->w) / 2 - 20,
         .y = 50,
         .w = titleSurface->w,
         .h = titleSurface->h
@@ -60,21 +61,21 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect howToPlayTitleRect = {
         .x = 260,
-        .y = 200,
+        .y = 180,
         .w = howToPlayTitleSurface->w,
         .h = howToPlayTitleSurface->h
     };
 
     SDL_Rect followInstructionsTitleRect = {
         .x = 255,
-        .y = 505,
+        .y = 485,
         .w = followInstructionsTitleSurface->w,
         .h = followInstructionsTitleSurface->h
     };
 
     SDL_Rect doNotModifyRect = {
         .x = 290,
-        .y = 580,
+        .y = 560,
         .w = doNotModifySurface->w,
         .h = doNotModifySurface->h
     };
@@ -107,9 +108,9 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect backButtonRect = {
         .x = 10,
-        .y = 30,
-        .w = 128,
-        .h = 128
+        .y = 20,
+        .w = 148,
+        .h = 148
     };
 
     SDL_Surface *exit_button_surface = IMG_Load("resources/assets/img/buttons/exit_button.png");
@@ -126,10 +127,10 @@ int displayHelpMenu(SDL_Renderer* renderer) {
     }
 
     SDL_Rect exitButtonRect = {
-        .x = 1280 - 226 - 10,
-        .y = -10,
-        .w = 212,
-        .h = 212
+        .x = 1280 - 148 - 10,
+        .y = 20,
+        .w = 148,
+        .h = 148
     };
 
     SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
@@ -199,14 +200,14 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect howToPlayIconRect = {
         .x = 150,
-        .y = 170,
+        .y = 150,
         .w = 100,
         .h = 100
     };
 
     SDL_Rect followInstructionsIconRect = {
         .x = 160,
-        .y = 480,
+        .y = 460,
         .w = 80,
         .h = 80
     };
@@ -235,28 +236,28 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect rule1Rect = {
         .x = 290,
-        .y = 280,
+        .y = 260,
         .w = rule1Surface->w,
         .h = rule1Surface->h
     };
 
     SDL_Rect rule2Rect = {
         .x = 290,
-        .y = 330,
+        .y = 310,
         .w = rule2Surface->w,
         .h = rule2Surface->h
     };
 
     SDL_Rect rule3Rect = {
         .x = 290,
-        .y = 380,
+        .y = 360,
         .w = rule3Surface->w,
         .h = rule3Surface->h
     };
 
     SDL_Rect rule4Rect = {
         .x = 290,
-        .y = 430,
+        .y = 410,
         .w = rule4Surface->w,
         .h = rule4Surface->h
     };
@@ -276,28 +277,28 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect pinIconRect1 = {
         .x = 250,
-        .y = 265,
+        .y = 245,
         .w = 34,
         .h = 34
     };
 
     SDL_Rect pinIconRect2 = {
         .x = 250,
-        .y = 315,
+        .y = 295,
         .w = 34,
         .h = 34
     };
 
     SDL_Rect pinIconRect3 = {
         .x = 250,
-        .y = 365,
+        .y = 345,
         .w = 34,
         .h = 34
     };
 
     SDL_Rect pinIconRect4 = {
         .x = 250,
-        .y = 415,
+        .y = 395,
         .w = 34,
         .h = 34
     };
@@ -320,13 +321,13 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect instructionRect = {
         .x = 290,
-        .y = 630,
+        .y = 610,
         .w = instructionSurface->w,
         .h = instructionSurface->h
     };
 
     SDL_Rect folderRect = {
-        .x = 290,
+        .x = 280,
         .y = instructionRect.y + instructionRect.h + 5,
         .w = folderSurface->w,
         .h = folderSurface->h
@@ -347,14 +348,14 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
     SDL_Rect rightArrowIconRect1 = {
         .x = 235,
-        .y = 570,
+        .y = 550,
         .w = 42,
         .h = 42
     };
 
     SDL_Rect rightArrowIconRect2 = {
         .x = 235,
-        .y = 620,
+        .y = 600,
         .w = 42,
         .h = 42
     };
@@ -399,52 +400,108 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         .h = githubTextSurface->h
     };
 
-    SDL_Surface* opinionIconSurface = IMG_Load("resources/assets/img/icons/opinion.png");
-    SDL_Surface* opinionTextSurface1 = TTF_RenderText_Blended(textFont, "Submit your ideas", textColor);
-    SDL_Surface* opinionTextSurface2 = TTF_RenderText_Blended(textFont, "and share your thoughts", textColor);
-    SDL_Surface* opinionTextSurface3 = TTF_RenderText_Blended(textFont, "about the game.", textColor);
+    TTF_Font* bubbleFont = TTF_OpenFont("resources/assets/fonts/Indiana-Jonas-48ip.otf", 30);
 
-    if (!opinionIconSurface || !opinionTextSurface1 || !opinionTextSurface2 || !opinionTextSurface3) {
-        printf("Failed to load opinion icon or create text surface: %s\n", IMG_GetError());
+    if (!bubbleFont) {
+        printf("Failed to load bubbleFont: %s\n", TTF_GetError());
     }
 
-    SDL_Texture* opinionIconTexture = SDL_CreateTextureFromSurface(renderer, opinionIconSurface);
-    SDL_Texture* opinionTextTexture1 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface1);
-    SDL_Texture* opinionTextTexture2 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface2);
-    SDL_Texture* opinionTextTexture3 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface3);
-    SDL_FreeSurface(opinionIconSurface);
-    SDL_FreeSurface(opinionTextSurface1);
-    SDL_FreeSurface(opinionTextSurface2);
-    SDL_FreeSurface(opinionTextSurface3);
+    SDL_Surface* bubbleSurface = IMG_Load("resources/assets/img/background/bubble.png");
 
-    if (!opinionIconTexture || !opinionTextTexture1 || !opinionTextTexture2 || !opinionTextTexture3) {
-        printf("Failed to create opinion icon or text texture: %s\n", SDL_GetError());
+    if (!bubbleSurface) {
+        printf("Failed to load background image: %s\n", IMG_GetError());
     }
 
-    SDL_Rect opinionIconRect = {
-        .x = exitButtonRect.x,
-        .y = exitButtonRect.y + exitButtonRect.h + 10,
-        .w = 64,
-        .h = 64
+    SDL_Texture* bubbleTexture = SDL_CreateTextureFromSurface(renderer, bubbleSurface);
+    SDL_FreeSurface(bubbleSurface);
+
+    if (!bubbleTexture) {
+        printf("Failed to create bubble texture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect bubbleRect = {
+        .x = 950,
+        .y = 300,
+        .w = 328,
+        .h = 328
     };
 
+    SDL_Surface* githubCharacterSurface = IMG_Load("resources/assets/img/icons/github-character.png");
+
+    if (!githubCharacterSurface) {
+        printf("Failed to load githubCharacterSurface: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* githubCharacterTexture = SDL_CreateTextureFromSurface(renderer, githubCharacterSurface);
+    SDL_FreeSurface(githubCharacterSurface);
+
+    if (!githubCharacterTexture) {
+        printf("Failed to create githubCharacterTexture: %s\n", SDL_GetError());
+    }
+
+    SDL_Rect githubCharacterRect = {
+        .x = 870,
+        .y = 470,
+        .w = 120,
+        .h = 120
+    };
+
+    SDL_Surface* opinionTextSurface1 = TTF_RenderText_Blended(bubbleFont, "Submit your ideas", textColorBull);
+
+    if (!opinionTextSurface1) {
+        printf("Failed to load opinionTextSurface1: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* opinionTextTexture1 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface1);
+    SDL_FreeSurface(opinionTextSurface1);
+
+    if (!opinionTextTexture1) {
+        printf("Failed to load opinionTextTexture1: %s\n", IMG_GetError());
+    }
+
     SDL_Rect opinionTextRect1 = {
-        .x = opinionIconRect.x + opinionIconRect.w + 10,
-        .y = opinionIconRect.y,
+        .x = 1080,
+        .y = 390,
         .w = opinionTextSurface1->w,
         .h = opinionTextSurface1->h
     };
 
+    SDL_Surface* opinionTextSurface2 = TTF_RenderText_Blended(bubbleFont, "and share your thoughts", textColorBull);
+
+    if (!opinionTextSurface2) {
+        printf("Failed to load opinionTextSurface2: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* opinionTextTexture2 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface2);
+    SDL_FreeSurface(opinionTextSurface2);
+
+    if (!opinionTextTexture2) {
+        printf("Failed to load opinionTextTexture2: %s\n", IMG_GetError());
+    }
+
     SDL_Rect opinionTextRect2 = {
-        .x = opinionTextRect1.x,
-        .y = opinionTextRect1.y + opinionTextRect1.h + 5,
+        .x = 1050,
+        .y = 420,
         .w = opinionTextSurface2->w,
         .h = opinionTextSurface2->h
     };
 
+    SDL_Surface* opinionTextSurface3 = TTF_RenderText_Blended(bubbleFont, "about the game", textColorBull);
+
+    if (!opinionTextSurface3) {
+        printf("Failed to load opinionTextSurface3: %s\n", IMG_GetError());
+    }
+
+    SDL_Texture* opinionTextTexture3 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface3);
+    SDL_FreeSurface(opinionTextSurface3);
+
+    if (!opinionTextTexture3) {
+        printf("Failed to load opinionTextTexture3: %s\n", IMG_GetError());
+    }
+
     SDL_Rect opinionTextRect3 = {
-        .x = opinionTextRect2.x,
-        .y = opinionTextRect2.y + opinionTextRect2.h + 5,
+        .x = 1085,
+        .y = 450,
         .w = opinionTextSurface3->w,
         .h = opinionTextSurface3->h
     };
@@ -519,7 +576,8 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, rule4Texture, NULL, &rule4Rect);
         SDL_RenderCopy(renderer, pinIconTexture, NULL, &pinIconRect4);
 
-        SDL_RenderCopy(renderer, opinionIconTexture, NULL, &opinionIconRect);
+        SDL_RenderCopy(renderer, bubbleTexture, NULL, &bubbleRect);
+        SDL_RenderCopy(renderer, githubCharacterTexture, NULL, &githubCharacterRect);
         SDL_RenderCopy(renderer, opinionTextTexture1, NULL, &opinionTextRect1);
         SDL_RenderCopy(renderer, opinionTextTexture2, NULL, &opinionTextRect2);
         SDL_RenderCopy(renderer, opinionTextTexture3, NULL, &opinionTextRect3);
