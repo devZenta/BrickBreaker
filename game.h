@@ -7,6 +7,6 @@
 
 #include <SDL.h>
 
-void startGame(SDL_Renderer* renderer);
+int displayGame(SDL_Renderer* renderer);
 
 #endif //GAME_H

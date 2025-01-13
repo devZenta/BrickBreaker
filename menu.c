@@ -303,7 +303,7 @@ int displayMenu(SDL_Renderer* renderer){
         }
 
         if(game){
-            //displayGame(renderer);
+            displayGame(renderer);
             quit = true;
             return 1;
         } else if(settings){
