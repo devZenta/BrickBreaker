@@ -23,5 +23,20 @@ jobs:
       - name: Build the project
         run: gcc -o BrickBreaker *.c -I"C:\tools\msys64\mingw64\include\SDL2" -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
-      - name: Run tests
-        run: .\BrickBreaker.exe
+      - name: Copy necessary files
+        run: |
+          mkdir temp
+          copy BrickBreaker.exe temp\
+          copy resources\* temp\resources\
+          copy C:\tools\msys64\mingw64\bin\SDL2.dll temp\
+          copy C:\tools\msys64\mingw64\bin\SDL2_image.dll temp\
+          copy C:\tools\msys64\mingw64\bin\SDL2_ttf.dll temp\
+
+      - name: Create zip file
+        run: powershell Compress-Archive -Path temp\* -DestinationPath BrickBreaker.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BrickBreaker
+          path: BrickBreaker.zip
