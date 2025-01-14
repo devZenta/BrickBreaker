@@ -20,7 +20,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y build-essential gcc libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 
       - name: Build the project
-        run: gcc -o BrickBreaker *.c -lSDL2 -lSDL2_image -lSDL2_ttf
+        run: gcc -o BrickBreaker *.c -I/usr/include/SDL2 -lSDL2 -lSDL2_image -lSDL2_ttf
 
       - name: Run tests
         run: ./BrickBreaker
