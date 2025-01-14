@@ -138,7 +138,7 @@ int displayGame(SDL_Renderer* renderer) {
         620,
         30,
         200,
-        5,
+        1,
         false,
         paddleTexture
     };
@@ -176,6 +176,9 @@ int displayGame(SDL_Renderer* renderer) {
     bool gameStarted = false;
     bool showPopup = false;
 
+    bool moveLeft = false;
+    bool moveRight = false;
+
     SDL_bool quit = SDL_FALSE;
 
     while (!quit) {
@@ -183,14 +186,19 @@ int displayGame(SDL_Renderer* renderer) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = SDL_TRUE;
-                return 0;
             } else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_q) {
-                    paddle.x -= paddle.speed * 10;
+                    moveLeft = true;
                 } else if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
-                    paddle.x += paddle.speed * 10;
+                    moveRight = true;
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
                     showPopup = true;
+                }
+            } else if (event.type == SDL_KEYUP) {
+                if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_q) {
+                    moveLeft = false;
+                } else if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
+                    moveRight = false;
                 }
             } else if (event.type == SDL_MOUSEMOTION) {
                 paddle.x = event.motion.x - paddle.w / 2;
@@ -211,6 +219,19 @@ int displayGame(SDL_Renderer* renderer) {
             }
         }
 
+        if (!showPopup) {
+            if (moveLeft) {
+                paddle.x -= paddle.speed;
+            }
+            if (moveRight) {
+                paddle.x += paddle.speed;
+            }
+        }
+
+        if (!showPopup) {
+            paddleRect.x = paddle.x;
+        }
+
         int leftBarLimit = leftBarRect.x + leftBarRect.w;
         int rightBarLimit = rightBarRect.x - paddle.w;
 
@@ -219,11 +240,6 @@ int displayGame(SDL_Renderer* renderer) {
         } else if (paddle.x > rightBarLimit) {
             paddle.x = rightBarLimit;
         }
-
-        if(!showPopup) {
-            paddleRect.x = paddle.x;
-        }
-
 
         if (gameStarted && !showPopup) {
             if (SDL_GetTicks() - lastTimer > 16) {
