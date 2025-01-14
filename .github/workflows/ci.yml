@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C/C++ Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
@@ -20,33 +20,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
-        run: sudo apt-get install -y libsdl2-dev libsdl2-image-dev
-
       - name: Build
         run: make
 
       - name: Run tests
         run: make test
-
-      - name: Download SDL2 DLLs
-        run: |
-          wget -q -O SDL2.dll https://www.libsdl.org/release/SDL2.dll
-          wget -q -O SDL2_image.dll https://www.libsdl.org/projects/SDL_image/release/SDL2_image.dll
-          wget -q -O SDL2_ttf.dll https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf.dll
-
-      - name: Generate .exe
-        run: |
-          x86_64-w64-mingw32-gcc -o BrickBreaker.exe main.c -lSDL2 -lSDL2_image -lSDL2_ttf
-
-      - name: Copy resources
-        run: cp -r resources/ BrickBreaker_resources/
-
-      - name: Create zip file
-        run: zip -r BrickBreaker.zip BrickBreaker.exe BrickBreaker_resources/ SDL2.dll SDL2_image.dll SDL2_ttf.dll
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: BrickBreaker-zip
-          path: BrickBreaker.zip
