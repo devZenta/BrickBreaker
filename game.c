@@ -15,6 +15,8 @@
 
 int displayGame(SDL_Renderer* renderer) {
 
+    int lastTimer = SDL_GetTicks();
+
     SDL_Surface *background_menu = IMG_Load("resources/assets/img/background/background_menu.jpg");
 
     if (!background_menu) {
@@ -148,8 +150,8 @@ int displayGame(SDL_Renderer* renderer) {
         paddle.y - 35,
         25,
         25,
-        1,
-        1 ,
+        7,
+        7,
         1,
         ballTexture
     };
@@ -171,6 +173,9 @@ int displayGame(SDL_Renderer* renderer) {
         bricks[i].texture = brickTextures[i / BRICKS_PER_ROW];
     }
 
+    bool gameStarted = false;
+    bool showPopup = false;
+
     SDL_bool quit = SDL_FALSE;
 
     while (!quit) {
@@ -181,12 +186,28 @@ int displayGame(SDL_Renderer* renderer) {
                 return 0;
             } else if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_q) {
-                    paddle.x -= paddle.speed * 5;
+                    paddle.x -= paddle.speed * 10;
                 } else if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
-                    paddle.x += paddle.speed * 5;
+                    paddle.x += paddle.speed * 10;
+                } else if (event.key.keysym.sym == SDLK_ESCAPE) {
+                    showPopup = true;
                 }
             } else if (event.type == SDL_MOUSEMOTION) {
                 paddle.x = event.motion.x - paddle.w / 2;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+                if (showPopup) {
+                    SDL_Point mousePoint = { event.button.x, event.button.y };
+                    SDL_Rect continueButton = {540, 300, 200, 50};
+                    SDL_Rect quitButton = {540, 400, 200, 50};
+
+                    if (SDL_PointInRect(&mousePoint, &continueButton)) {
+                        showPopup = false;
+                    } else if (SDL_PointInRect(&mousePoint, &quitButton)) {
+                        quit = SDL_TRUE;
+                    }
+                } else {
+                    gameStarted = true;
+                }
             }
         }
 
@@ -199,7 +220,52 @@ int displayGame(SDL_Renderer* renderer) {
             paddle.x = rightBarLimit;
         }
 
-        paddleRect.x = paddle.x;
+        if(!showPopup) {
+            paddleRect.x = paddle.x;
+        }
+
+
+        if (gameStarted && !showPopup) {
+            if (SDL_GetTicks() - lastTimer > 16) {
+                ball.x += ball.speedX;
+                ball.y += ball.speedY;
+                lastTimer = SDL_GetTicks();
+            }
+
+            if (ball.x <= leftBarRect.x + leftBarRect.w || ball.x + ball.w >= rightBarRect.x) {
+                ball.speedX = -ball.speedX;
+            }
+
+            if (ball.y <= horizontalBarRect.y + horizontalBarRect.h) {
+                ball.speedY = -ball.speedY;
+            }
+
+            if (SDL_HasIntersection(&ballRect, &paddleRect)) {
+                ball.speedY = -ball.speedY;
+                ball.y = paddle.y - ball.h;
+            }
+
+            if (ball.y + ball.h >= 720) {
+                gameStarted = false;
+                ball.x = paddle.x + paddle.w / 2 - ball.w / 2;
+                ball.y = paddle.y - ball.h;
+                ball.speedX = 3;
+                ball.speedY = -3;
+            }
+
+            for (int i = 0; i < NUM_BRICKS; i++) {
+                if (bricks[i].life > 0) {
+                    SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
+                    if (SDL_HasIntersection(&ballRect, &brickRect)) {
+                        bricks[i].life = 0;
+                        ball.speedY = -ball.speedY;
+                    }
+                }
+            }
+        }
+
+        ballRect.x = ball.x;
+        ballRect.y = ball.y;
 
         SDL_RenderClear(renderer);
 
@@ -215,6 +281,19 @@ int displayGame(SDL_Renderer* renderer) {
         for (int i = 0; i < NUM_BRICKS; i++) {
             SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
             SDL_RenderCopy(renderer, bricks[i].texture, NULL, &brickRect);
+        }
+
+        if (showPopup) {
+
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect popupRect = {440, 200, 400, 300};
+            SDL_RenderFillRect(renderer, &popupRect);
+
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_Rect continueButton = {540, 300, 200, 50};
+            SDL_Rect quitButton = {540, 400, 200, 50};
+            SDL_RenderFillRect(renderer, &continueButton);
+            SDL_RenderFillRect(renderer, &quitButton);
         }
 
         SDL_RenderPresent(renderer);
