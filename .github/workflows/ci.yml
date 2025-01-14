@@ -10,30 +10,27 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install SDL2 libraries
-        run: |
-          choco install -y sdl2 sdl2-image sdl2-ttf
+        run: sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 
       - name: Build the project
-        run: gcc -o BrickBreaker *.c -I"C:\tools\msys64\mingw64\include\SDL2" -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+        run: gcc -o BrickBreaker *.c -lSDL2 -lSDL2_image -lSDL2_ttf
 
       - name: Copy necessary files
         run: |
           mkdir temp
-          copy BrickBreaker.exe temp\
-          copy resources\* temp\resources\
-          copy C:\tools\msys64\mingw64\bin\SDL2.dll temp\
-          copy C:\tools\msys64\mingw64\bin\SDL2_image.dll temp\
-          copy C:\tools\msys64\mingw64\bin\SDL2_ttf.dll temp\
+          cp BrickBreaker temp/
+          cp -r resources temp/
+          cp /usr/lib/x86_64-linux-gnu/libSDL2*.so* temp/
 
       - name: Create zip file
-        run: powershell Compress-Archive -Path temp\* -DestinationPath BrickBreaker.zip
+        run: zip -r BrickBreaker.zip temp/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
