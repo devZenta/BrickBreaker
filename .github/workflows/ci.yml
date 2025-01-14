@@ -10,27 +10,35 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install SDL2 libraries
-        run: sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+        run: |
+          curl -L -o SDL2.zip https://www.libsdl.org/release/SDL2-devel-2.0.14-VC.zip
+          curl -L -o SDL2_image.zip https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
+          curl -L -o SDL2_ttf.zip https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-VC.zip
+          tar -xf SDL2.zip -C C:\tools
+          tar -xf SDL2_image.zip -C C:\tools
+          tar -xf SDL2_ttf.zip -C C:\tools
 
       - name: Build the project
-        run: gcc -o BrickBreaker *.c -lSDL2 -lSDL2_image -lSDL2_ttf
+        run: gcc -o BrickBreaker *.c -I"C:\tools\SDL2-2.0.14\include" -I"C:\tools\SDL2_image-2.0.5\include" -I"C:\tools\SDL2_ttf-2.0.15\include" -L"C:\tools\SDL2-2.0.14\lib\x64" -L"C:\tools\SDL2_image-2.0.5\lib\x64" -L"C:\tools\SDL2_ttf-2.0.15\lib\x64" -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
       - name: Copy necessary files
         run: |
           mkdir temp
-          cp BrickBreaker temp/
-          cp -r resources temp/
-          cp /usr/lib/x86_64-linux-gnu/libSDL2*.so* temp/
+          copy BrickBreaker.exe temp\
+          copy resources\* temp\resources\
+          copy C:\tools\SDL2-2.0.14\lib\x64\SDL2.dll temp\
+          copy C:\tools\SDL2_image-2.0.5\lib\x64\SDL2_image.dll temp\
+          copy C:\tools\SDL2_ttf-2.0.15\lib\x64\SDL2_ttf.dll temp\
 
       - name: Create zip file
-        run: zip -r BrickBreaker.zip temp/
+        run: powershell Compress-Archive -Path temp\* -DestinationPath BrickBreaker.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
