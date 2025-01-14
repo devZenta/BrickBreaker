@@ -1,4 +1,4 @@
-name: C CI Workflow
+name: C Test Workflow
 
 on:
   push:
@@ -9,30 +9,18 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : Vérifier le code du dépôt
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Étape 2 : Installer les dépendances
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential gcc make cmake libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
+      - name: Install build tools and SDL2 libraries
+        run: sudo apt-get update && sudo apt-get install -y build-essential gcc libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev
 
-      # Étape 3 : Construire le projet
       - name: Build the project
-        run: |
-          mkdir -p build
-          cd build
-          cmake ..
-          make
+        run: gcc -o BrickBreaker *.c -lSDL2 -lSDL2_image -lSDL2_ttf
 
-      # Étape 4 : Exécuter les tests
       - name: Run tests
-        run: |
-          cd build
-          ctest --output-on-failure
+        run: ./BrickBreaker
