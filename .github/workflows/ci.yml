@@ -31,6 +31,7 @@ jobs:
       - name: Copy necessary files
         run: |
           mkdir temp
+          mkdir temp\resources
           copy BrickBreaker.exe temp\
           if (Test-Path -Path cmake-build-debug\resources) { copy cmake-build-debug\resources\* temp\resources\ }
           copy C:\tools\SDL2-2.0.14\lib\x64\SDL2.dll temp\
