@@ -38,6 +38,6 @@ struct brick {
     SDL_Texture* texture;
 };
 
-int displayGame(SDL_Renderer* renderer);
+void displayGame(SDL_Renderer* renderer);
 
 #endif //GAME_H
