@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#define NUM_BRICKS 50
-#define BRICKS_PER_ROW 10
+#define NUM_BRICKS 55
+#define BRICKS_PER_ROW 11
 #define NUM_ROWS 5
 
 void displayGame(SDL_Renderer* renderer) {
@@ -153,11 +153,17 @@ void displayGame(SDL_Renderer* renderer) {
         ball.h
     };
 
+    int initialPaddleX = (1280 - 200) / 2;
+    int initialPaddleY = 620;
+    int initialBallX = initialPaddleX + 200 / 2 - 25 / 2;
+    int initialBallY = initialPaddleY - 35;
+
     struct brick bricks[NUM_BRICKS];
+
     int brickWidth = 100;
-    int brickHeight = 40;
+    int brickHeight = 45;
     int startX = (1280 - (BRICKS_PER_ROW * brickWidth)) / 2;
-    int startY = 50;
+    int startY = 25;
 
     for (int i = 0; i < NUM_BRICKS; i++) {
         bricks[i].x = startX + (i % BRICKS_PER_ROW) * brickWidth;
@@ -259,8 +265,32 @@ void displayGame(SDL_Renderer* renderer) {
                 ball.speedX = -ball.speedX;
             }
 
-            if (ball.y + ball.h + ball.speedY > 720 || ball.y + ball.speedY < 0) {
+            if (ball.y + ball.h + ball.speedY < 0) {
                 ball.speedY = -ball.speedY;
+            }
+
+            if (SDL_HasIntersection(&ballRect, &paddleRect)) {
+                ball.speedY = -ball.speedY;
+                ball.y = paddle.y - ball.h;
+            }
+
+            for (int i = 0; i < NUM_BRICKS; i++) {
+                SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
+                if (bricks[i].life > 0 && SDL_HasIntersection(&ballRect, &brickRect)) {
+                    bricks[i].life = 0;
+                    ball.speedY = -ball.speedY;
+                    break;
+                }
+            }
+
+            if (ball.y + ball.h > 720) {
+                paddle.x = initialPaddleX;
+                paddle.y = initialPaddleY;
+                ball.x = initialBallX;
+                ball.y = initialBallY;
+                ball.speedX = 7;
+                ball.speedY = -7;
+                gameStarted = false;
             }
 
             ballRect.x = ball.x;
@@ -279,8 +309,10 @@ void displayGame(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, ball.texture, NULL, &ballRect);
 
         for (int i = 0; i < NUM_BRICKS; i++) {
-            SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
-            SDL_RenderCopy(renderer, bricks[i].texture, NULL, &brickRect);
+            if (bricks[i].life > 0) {
+                SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
+                SDL_RenderCopy(renderer, bricks[i].texture, NULL, &brickRect);
+            }
         }
 
         if (showPopup) {
