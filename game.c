@@ -3,6 +3,8 @@
 //
 
 #include "game.h"
+#include "data.h"
+#include "menu.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -16,6 +18,42 @@
 void displayGame(SDL_Renderer* renderer) {
 
     Uint32 lastTimer = SDL_GetTicks();
+
+    int selectedDifficulty, volume;
+
+    int brickLife;
+    int life;
+    int ballSpeed;
+    int paddleSpeed;
+    bool invisiblePaddle;
+
+    load_settings(&selectedDifficulty, &volume);
+
+    if (selectedDifficulty == 1) {
+
+        brickLife = 1;
+        life = 3;
+        ballSpeed = 7;
+        paddleSpeed = 2;
+        invisiblePaddle = false;
+
+    } else if (selectedDifficulty == 2) {
+
+        brickLife = 2;
+        life = 2;
+        ballSpeed = 9;
+        paddleSpeed = 2;
+        invisiblePaddle = false;
+
+    } else if (selectedDifficulty == 3) {
+
+        brickLife = 3;
+        life = 1;
+        ballSpeed = 11;
+        paddleSpeed = 3;
+        invisiblePaddle = true;
+
+    }
 
     SDL_Surface *background_menu = IMG_Load("resources/assets/img/background/background_menu.jpg");
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
@@ -56,12 +94,28 @@ void displayGame(SDL_Renderer* renderer) {
         50
     };
 
-    SDL_Rect quitButton = {
+    SDL_Rect restartButton = {
         540,
-        400,
+        370,
         200,
         50
     };
+
+    SDL_Rect menuButton = {
+        540,
+        440,
+        200,
+        50
+    };
+
+    SDL_Rect quitButton = {
+        540,
+        510,
+        200,
+        50
+    };
+
+
 
     TTF_Font* buttonFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
 
@@ -96,9 +150,91 @@ void displayGame(SDL_Renderer* renderer) {
 
     SDL_Rect quitTextRect = {
         610,
-        410,
+        520,
         quitTextSurface->w,
         quitTextSurface->h
+    };
+
+    SDL_Surface* restartTextSurface = TTF_RenderText_Blended(buttonFont, "Restart", buttonTextColor);
+    SDL_Texture* restartTextTexture = SDL_CreateTextureFromSurface(renderer, restartTextSurface);
+    SDL_FreeSurface(restartTextSurface);
+
+    SDL_Rect restartTextRect = {
+        585,
+        380,
+        restartTextSurface->w,
+        restartTextSurface->h
+    };
+
+    SDL_Surface* menuTextSurface = TTF_RenderText_Blended(buttonFont, "Menu", buttonTextColor);
+    SDL_Texture* menuTextTexture = SDL_CreateTextureFromSurface(renderer, menuTextSurface);
+    SDL_FreeSurface(menuTextSurface);
+
+    SDL_Rect menuTextRect = {
+        595,
+        450,
+        menuTextSurface->w,
+        menuTextSurface->h
+    };
+
+    SDL_Surface* easyEmoticonSurface = IMG_Load("resources/assets/img/levels/simple_level.png");
+    SDL_Texture* easyEmoticonTexture = SDL_CreateTextureFromSurface(renderer, easyEmoticonSurface);
+    SDL_FreeSurface(easyEmoticonSurface);
+
+    SDL_Surface* mediumEmoticonSurface = IMG_Load("resources/assets/img/levels/medium_level.png");
+    SDL_Texture* mediumEmoticonTexture = SDL_CreateTextureFromSurface(renderer, mediumEmoticonSurface);
+    SDL_FreeSurface(mediumEmoticonSurface);
+
+    SDL_Surface* hardEmoticonSurface = IMG_Load("resources/assets/img/levels/hard_level.png");
+    SDL_Texture* hardEmoticonTexture = SDL_CreateTextureFromSurface(renderer, hardEmoticonSurface);
+    SDL_FreeSurface(hardEmoticonSurface);
+
+    SDL_Texture* selectedEmoticonTexture = NULL;
+
+    if (selectedDifficulty == 1) {
+
+        selectedEmoticonTexture = easyEmoticonTexture;
+
+    } else if (selectedDifficulty == 2) {
+
+        selectedEmoticonTexture = mediumEmoticonTexture;
+
+    } else if (selectedDifficulty == 3) {
+
+        selectedEmoticonTexture = hardEmoticonTexture;
+
+    }
+
+    SDL_Rect emoticonRect = {
+        .x = 1280 - 64 - 20,
+        .y = 720 - 64 - 20,
+        .w = 64,
+        .h = 64
+    };
+
+    SDL_Surface* lifeIconSurface = IMG_Load("resources/assets/img/icons/life.png");
+    SDL_Texture* lifeIconTexture = SDL_CreateTextureFromSurface(renderer, lifeIconSurface);
+    SDL_FreeSurface(lifeIconSurface);
+
+    SDL_Rect life1IconRect = {
+        .x = 20,
+        .y = emoticonRect.y,
+        .w = 64,
+        .h = 64
+    };
+
+    SDL_Rect life2IconRect = {
+        .x = 40,
+        .y = emoticonRect.y,
+        .w = 64,
+        .h = 64
+    };
+
+    SDL_Rect life3IconRect = {
+        .x = 60,
+        .y = emoticonRect.y,
+        .w = 64,
+        .h = 64
     };
 
     SDL_Surface* brickSurfaces[NUM_ROWS] = {
@@ -123,8 +259,8 @@ void displayGame(SDL_Renderer* renderer) {
         620,
         30,
         200,
-        2,
-        false,
+        paddleSpeed,
+        invisiblePaddle,
         paddleTexture
     };
 
@@ -140,8 +276,8 @@ void displayGame(SDL_Renderer* renderer) {
         paddle.y - 35,
         25,
         25,
-        7,
-        7,
+        0,
+        -ballSpeed,
         1,
         ballTexture
     };
@@ -170,7 +306,7 @@ void displayGame(SDL_Renderer* renderer) {
         bricks[i].y = startY + (i / BRICKS_PER_ROW) * brickHeight;
         bricks[i].w = brickWidth;
         bricks[i].h = brickHeight;
-        bricks[i].life = 1;
+        bricks[i].life = brickLife;
         bricks[i].texture = brickTextures[i / BRICKS_PER_ROW];
     }
 
@@ -234,7 +370,18 @@ void displayGame(SDL_Renderer* renderer) {
 
                         quit = SDL_TRUE;
 
+                    } else if (SDL_PointInRect(&mousePoint, &menuButton)) {
+
+                        displayMenu(renderer);
+                        quit = SDL_TRUE;
+
+                    } else if (SDL_PointInRect(&mousePoint, &restartButton)) {
+
+                        displayGame(renderer);
+                        quit = SDL_TRUE;
+
                     }
+
                 } else {
 
                     gameStarted = true;
@@ -277,7 +424,7 @@ void displayGame(SDL_Renderer* renderer) {
             for (int i = 0; i < NUM_BRICKS; i++) {
                 SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
                 if (bricks[i].life > 0 && SDL_HasIntersection(&ballRect, &brickRect)) {
-                    bricks[i].life = 0;
+                    bricks[i].life--;
                     ball.speedY = -ball.speedY;
                     break;
                 }
@@ -288,9 +435,17 @@ void displayGame(SDL_Renderer* renderer) {
                 paddle.y = initialPaddleY;
                 ball.x = initialBallX;
                 ball.y = initialBallY;
-                ball.speedX = 7;
-                ball.speedY = -7;
+                ball.speedX = 0;
+                ball.speedY = -ballSpeed;
                 gameStarted = false;
+                if (life > 0) {
+                    life--;
+                }
+            }
+
+            if (life == 0) {
+                displayMenu(renderer);
+                quit = SDL_TRUE;
             }
 
             ballRect.x = ball.x;
@@ -315,18 +470,34 @@ void displayGame(SDL_Renderer* renderer) {
             }
         }
 
+        SDL_RenderCopy(renderer, selectedEmoticonTexture, NULL, &emoticonRect);
+
+        if (life >= 1) {
+            SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life1IconRect);
+        }
+        if (life >= 2) {
+            SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life2IconRect);
+        }
+        if (life >= 3) {
+            SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life3IconRect);
+        }
+
         if (showPopup) {
 
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
-            SDL_Rect popupRect = {440, 200, 400, 300};
+            SDL_Rect popupRect = {440, 200, 400, 400};
             SDL_RenderFillRect(renderer, &popupRect);
 
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderFillRect(renderer, &continueButton);
+            SDL_RenderFillRect(renderer, &restartButton);
+            SDL_RenderFillRect(renderer, &menuButton);
             SDL_RenderFillRect(renderer, &quitButton);
 
             SDL_RenderCopy(renderer, pauseTextTexture, NULL, &pauseTextRect);
             SDL_RenderCopy(renderer, continueTextTexture, NULL, &continueTextRect);
+            SDL_RenderCopy(renderer, restartTextTexture, NULL, &restartTextRect);
+            SDL_RenderCopy(renderer, menuTextTexture, NULL, &menuTextRect);
             SDL_RenderCopy(renderer, quitTextTexture, NULL, &quitTextRect);
 
         }
