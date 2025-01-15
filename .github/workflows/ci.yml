@@ -1,3 +1,4 @@
+
 name: C Test Workflow
 
 on:
@@ -24,20 +25,17 @@ jobs:
           tar -xf SDL2.zip -C C:\tools
           tar -xf SDL2_image.zip -C C:\tools
           tar -xf SDL2_ttf.zip -C C:\tools
-
       - name: Build the project
         run: gcc -o BrickBreaker *.c -I"C:\tools\SDL2-2.0.14\include" -I"C:\tools\SDL2_image-2.0.5\include" -I"C:\tools\SDL2_ttf-2.0.15\include" -L"C:\tools\SDL2-2.0.14\lib\x64" -L"C:\tools\SDL2_image-2.0.5\lib\x64" -L"C:\tools\SDL2_ttf-2.0.15\lib\x64" -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
       - name: Copy necessary files
         run: |
           mkdir temp
-          mkdir temp\resources
           copy BrickBreaker.exe temp\
-          Copy-Item -Path "resources\*" -Destination "temp\resources\" -Recurse -Force
+          if (Test-Path -Path cmake-build-debug\resources) { Copy-Item -Path cmake-build-debug\resources\* -Destination temp\resources\ -Recurse -Force }
           copy C:\tools\SDL2-2.0.14\lib\x64\SDL2.dll temp\
           copy C:\tools\SDL2_image-2.0.5\lib\x64\SDL2_image.dll temp\
           copy C:\tools\SDL2_ttf-2.0.15\lib\x64\SDL2_ttf.dll temp\
-
       - name: Create zip file
         run: powershell Compress-Archive -Path temp\* -DestinationPath BrickBreaker.zip
 
