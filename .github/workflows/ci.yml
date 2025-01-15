@@ -33,7 +33,7 @@ jobs:
           mkdir temp
           mkdir temp\resources
           copy BrickBreaker.exe temp\
-          copy resources\* temp\resources\ /s /e /y
+          Copy-Item -Path "resources\*" -Destination "temp\resources\" -Recurse -Force
           copy C:\tools\SDL2-2.0.14\lib\x64\SDL2.dll temp\
           copy C:\tools\SDL2_image-2.0.5\lib\x64\SDL2_image.dll temp\
           copy C:\tools\SDL2_ttf-2.0.15\lib\x64\SDL2_ttf.dll temp\
