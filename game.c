@@ -5,15 +5,27 @@
 #include "game.h"
 #include "data.h"
 #include "menu.h"
+#include "utils.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <stdio.h>
 #include <stdbool.h>
 
-#define NUM_BRICKS 55
-#define BRICKS_PER_ROW 11
-#define NUM_ROWS 5
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
+#define BRICK_WIDTH 100
+#define BRICK_HEIGHT 40
+
+#define BALL_SIZE 12
+
+#define PADDLE_HEIGHT 30
+#define PADDLE_WIDTH 150
+
+#define ROWS 5
+#define COLS 11
+
 
 void displayGame(SDL_Renderer* renderer) {
 
@@ -33,24 +45,24 @@ void displayGame(SDL_Renderer* renderer) {
 
         brickLife = 1;
         life = 3;
-        ballSpeed = 7;
-        paddleSpeed = 2;
+        ballSpeed = 4;
+        paddleSpeed = 10;
         invisiblePaddle = false;
 
     } else if (selectedDifficulty == 2) {
 
         brickLife = 2;
         life = 2;
-        ballSpeed = 9;
-        paddleSpeed = 2;
+        ballSpeed = 6;
+        paddleSpeed = 30;
         invisiblePaddle = false;
 
     } else if (selectedDifficulty == 3) {
 
         brickLife = 3;
         life = 1;
-        ballSpeed = 11;
-        paddleSpeed = 3;
+        ballSpeed = 8;
+        paddleSpeed = 50;
         invisiblePaddle = true;
 
     }
@@ -63,9 +75,37 @@ void displayGame(SDL_Renderer* renderer) {
     SDL_Texture* paddleTexture = SDL_CreateTextureFromSurface(renderer, paddleSurface);
     SDL_FreeSurface(paddleSurface);
 
-    SDL_Surface* ballSurface = IMG_Load("resources/assets/img/icons/ball.png");
-    SDL_Texture* ballTexture = SDL_CreateTextureFromSurface(renderer, ballSurface);
-    SDL_FreeSurface(ballSurface);
+    struct paddle paddle = {
+        (1280 - 150) / 2,
+        600,
+        PADDLE_HEIGHT,
+        PADDLE_WIDTH,
+        paddleSpeed,
+        invisiblePaddle,
+        paddleTexture
+    };
+
+    SDL_Rect paddleRect = {
+        paddle.x,
+        paddle.y,
+        paddle.w,
+        paddle.h
+    };
+
+    SDL_Rect ball = {
+        SCREEN_WIDTH / 2,
+        SCREEN_HEIGHT / 2,
+        BALL_SIZE,
+        BALL_SIZE
+    };
+
+    int ball_directionX = ballSpeed;
+    int ball_directionY = -ballSpeed;
+
+    int initialPaddleX = (1280 - 150) / 2;
+    int initialPaddleY = 600;
+    int initialBallX = initialPaddleX + 150 / 2 - 12 / 2;
+    int initialBallY = initialPaddleY - 35;
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
 
@@ -114,8 +154,6 @@ void displayGame(SDL_Renderer* renderer) {
         200,
         50
     };
-
-
 
     TTF_Font* buttonFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
 
@@ -237,7 +275,7 @@ void displayGame(SDL_Renderer* renderer) {
         .h = 64
     };
 
-    SDL_Surface* brickSurfaces[NUM_ROWS] = {
+    SDL_Surface* brickSurfaces[ROWS] = {
         IMG_Load("resources/assets/img/icons/green_brick.png"),
         IMG_Load("resources/assets/img/icons/blue_brick.png"),
         IMG_Load("resources/assets/img/icons/pink_brick.png"),
@@ -245,69 +283,26 @@ void displayGame(SDL_Renderer* renderer) {
         IMG_Load("resources/assets/img/icons/grey_brick.png")
     };
 
-    SDL_Texture* brickTextures[NUM_ROWS];
+    SDL_Texture* brickTextures[ROWS];
 
-    for (int i = 0; i < NUM_ROWS; i++) {
+    for (int i = 0; i < ROWS; i++) {
 
         brickTextures[i] = SDL_CreateTextureFromSurface(renderer, brickSurfaces[i]);
         SDL_FreeSurface(brickSurfaces[i]);
 
     }
 
-    struct paddle paddle = {
-        (1280 - 200) / 2,
-        620,
-        30,
-        200,
-        paddleSpeed,
-        invisiblePaddle,
-        paddleTexture
-    };
+    struct brick bricks[ROWS][COLS];
 
-    SDL_Rect paddleRect = {
-        paddle.x,
-        paddle.y,
-        paddle.w,
-        paddle.h
-    };
-
-    struct ball ball = {
-        paddle.x + paddle.w / 2 - 25 / 2,
-        paddle.y - 35,
-        25,
-        25,
-        0,
-        -ballSpeed,
-        1,
-        ballTexture
-    };
-
-    SDL_Rect ballRect = {
-        ball.x,
-        ball.y,
-        ball.w,
-        ball.h
-    };
-
-    int initialPaddleX = (1280 - 200) / 2;
-    int initialPaddleY = 620;
-    int initialBallX = initialPaddleX + 200 / 2 - 25 / 2;
-    int initialBallY = initialPaddleY - 35;
-
-    struct brick bricks[NUM_BRICKS];
-
-    int brickWidth = 100;
-    int brickHeight = 45;
-    int startX = (1280 - (BRICKS_PER_ROW * brickWidth)) / 2;
-    int startY = 25;
-
-    for (int i = 0; i < NUM_BRICKS; i++) {
-        bricks[i].x = startX + (i % BRICKS_PER_ROW) * brickWidth;
-        bricks[i].y = startY + (i / BRICKS_PER_ROW) * brickHeight;
-        bricks[i].w = brickWidth;
-        bricks[i].h = brickHeight;
-        bricks[i].life = brickLife;
-        bricks[i].texture = brickTextures[i / BRICKS_PER_ROW];
+    for (int row = 0; row < ROWS; row++) {
+        for (int col = 0; col < COLS; col++) {
+            bricks[row][col].rect.x = col * (BRICK_WIDTH + 10) + 50;
+            bricks[row][col].rect.y = row * (BRICK_HEIGHT + 10) + 30;
+            bricks[row][col].rect.w = BRICK_WIDTH;
+            bricks[row][col].rect.h = BRICK_HEIGHT;
+            bricks[row][col].lives = brickLife;
+            bricks[row][col].texture = brickTextures[row];
+        }
     }
 
     bool gameStarted = false;
@@ -402,41 +397,47 @@ void displayGame(SDL_Renderer* renderer) {
 
             paddleRect.x = paddle.x;
 
-            if (SDL_GetTicks() - lastTimer > 16) {
-                ball.x += ball.speedX;
-                ball.y += ball.speedY;
+            if (SDL_GetTicks() - lastTimer > 1) {
+                ball.x += ball_directionX;
+                ball.y += ball_directionY;
                 lastTimer = SDL_GetTicks();
             }
 
-            if (ball.x + ball.w + ball.speedX > 1280 || ball.x + ball.speedX < 0) {
-                ball.speedX = -ball.speedX;
-            }
+            if (ball.x <= 0 || ball.x + BALL_SIZE >= SCREEN_WIDTH) ball_directionX = -ball_directionX;
+            if (ball.y <= 0) ball_directionY = -ball_directionY;
 
-            if (ball.y + ball.h + ball.speedY < 0) {
-                ball.speedY = -ball.speedY;
-            }
+            if (check_collision(&ball, &paddleRect)) {
+                ball_directionY = -ball_directionY;
 
-            if (SDL_HasIntersection(&ballRect, &paddleRect)) {
-                ball.speedY = -ball.speedY;
-                ball.y = paddle.y - ball.h;
-            }
-
-            for (int i = 0; i < NUM_BRICKS; i++) {
-                SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
-                if (bricks[i].life > 0 && SDL_HasIntersection(&ballRect, &brickRect)) {
-                    bricks[i].life--;
-                    ball.speedY = -ball.speedY;
-                    break;
+                int hit_pos = ball.x + BALL_SIZE / 2 - paddle.x;
+                if (hit_pos < PADDLE_WIDTH / 3) {
+                    ball_directionX = -abs(ball_directionX);
+                } else if (hit_pos > 2 * PADDLE_WIDTH / 3) {
+                    ball_directionX = abs(ball_directionX);
                 }
             }
 
-            if (ball.y + ball.h > 720) {
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    struct brick *brick = &bricks[row][col];
+                    if (brick->lives > 0 && check_collision(&ball, &brick->rect)) {
+                        ball_directionY = -ball_directionY;
+                        brick->lives--;
+                        if (brick->lives == 0) {
+                            printf("Brick destroyed at row %d, col %d!\n", row, col);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (ball.y > SCREEN_HEIGHT) {
                 paddle.x = initialPaddleX;
                 paddle.y = initialPaddleY;
                 ball.x = initialBallX;
                 ball.y = initialBallY;
-                ball.speedX = 0;
-                ball.speedY = -ballSpeed;
+                ball_directionX = 0;
+                ball_directionY = -ballSpeed;
                 gameStarted = false;
                 if (life > 0) {
                     life--;
@@ -447,30 +448,30 @@ void displayGame(SDL_Renderer* renderer) {
                 displayMenu(renderer);
                 quit = SDL_TRUE;
             }
-
-            ballRect.x = ball.x;
-            ballRect.y = ball.y;
         }
 
         SDL_RenderClear(renderer);
 
         SDL_RenderCopy(renderer, texture, NULL, NULL);
 
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                if (bricks[row][col].lives > 0) {
+                    SDL_RenderCopy(renderer, bricks[row][col].texture, NULL, &bricks[row][col].rect);
+                }
+            }
+        }
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderFillRect(renderer, &ball);
+
         if (!gameStarted) {
             SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
         }
 
         SDL_RenderCopy(renderer, paddle.texture, NULL, &paddleRect);
-        SDL_RenderCopy(renderer, ball.texture, NULL, &ballRect);
 
-        for (int i = 0; i < NUM_BRICKS; i++) {
-            if (bricks[i].life > 0) {
-                SDL_Rect brickRect = {bricks[i].x, bricks[i].y, bricks[i].w, bricks[i].h};
-                SDL_RenderCopy(renderer, bricks[i].texture, NULL, &brickRect);
-            }
-        }
-
-        SDL_RenderCopy(renderer, selectedEmoticonTexture, NULL, &emoticonRect);
+       SDL_RenderCopy(renderer, selectedEmoticonTexture, NULL, &emoticonRect);
 
         if (life >= 1) {
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life1IconRect);
@@ -503,6 +504,6 @@ void displayGame(SDL_Renderer* renderer) {
         }
 
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
 }
-

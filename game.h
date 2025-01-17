@@ -18,23 +18,19 @@ struct paddle {
     SDL_Texture* texture;
 };
 
-struct ball {
-    int x;
-    int y;
-    int h;
-    int w;
-    int speedX;
-    int speedY;
-    int damage;
-    SDL_Texture* texture;
-};
 
-struct brick {
+/*struct brick {
     int x;
     int y;
     int h;
     int w;
     int life;
+    SDL_Texture* texture;
+};*/
+
+struct brick {
+    SDL_Rect rect;
+    int lives;
     SDL_Texture* texture;
 };
 

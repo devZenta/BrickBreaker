@@ -6,7 +6,8 @@
 #define UTILS_H
 
 #include <SDL.h>
+#include <stdbool.h>
 
-SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* path);
+bool check_collision(SDL_Rect *a, SDL_Rect *b);
 
 #endif //UTILS_H
