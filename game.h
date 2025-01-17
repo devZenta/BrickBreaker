@@ -32,6 +32,7 @@ struct brick {
     SDL_Rect rect;
     int lives;
     SDL_Texture* texture;
+    Uint32 last_hit_time;
 };
 
 void displayGame(SDL_Renderer* renderer);
