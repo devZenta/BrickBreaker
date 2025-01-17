@@ -42,7 +42,10 @@ void displayGame(SDL_Renderer* renderer) {
     int paddleSpeed;
     bool invisiblePaddle;
 
-    int score = 0;
+    float score = 0.0f;
+    int bricksRemaining = ROWS * COLS;
+    const float scorePerBrick = 100.0f / (ROWS * COLS);
+
     bool playerWon = false;
     bool playerLost = false;
 
@@ -106,9 +109,6 @@ void displayGame(SDL_Renderer* renderer) {
         BALL_SIZE
     };
 
-    //int ball_directionX = ballSpeed;
-    //int ball_directionY = -ballSpeed;
-
     int ball_directionX = (rand() % 2 == 0 ? -ballSpeed : ballSpeed);
     int ball_directionY = -ballSpeed;
 
@@ -166,17 +166,6 @@ void displayGame(SDL_Renderer* renderer) {
 
     SDL_Color titleTextColor = {255, 255, 255, 255};
     SDL_Color buttonTextColor = {178, 186, 187, 255};
-
-    SDL_Surface* pauseTextSurface = TTF_RenderText_Blended(buttonFont, "Pause Game", titleTextColor);
-    SDL_Texture* pauseTextTexture = SDL_CreateTextureFromSurface(renderer, pauseTextSurface);
-    SDL_FreeSurface(pauseTextSurface);
-
-    SDL_Rect pauseTextRect = {
-        550,
-        230,
-        pauseTextSurface->w,
-        pauseTextSurface->h
-    };
 
     SDL_Surface* continueTextSurface = TTF_RenderText_Blended(buttonFont, "Continue", buttonTextColor);
     SDL_Texture* continueTextTexture = SDL_CreateTextureFromSurface(renderer, continueTextSurface);
@@ -440,6 +429,7 @@ void displayGame(SDL_Renderer* renderer) {
             }
 
             Uint32 current_time = SDL_GetTicks();
+
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
                     struct brick *brick = &bricks[row][col];
@@ -448,7 +438,11 @@ void displayGame(SDL_Renderer* renderer) {
                             ball_directionY = -ball_directionY;
                             brick->lives--;
                             brick->last_hit_time = current_time;
-                            score++;
+                        }
+
+                        if (brick->lives == 0) {
+                            score += scorePerBrick;
+                            bricksRemaining--;
                         }
                         break;
                     }
@@ -472,7 +466,7 @@ void displayGame(SDL_Renderer* renderer) {
                 showPopup = true;
             }
 
-            if (score == ROWS * COLS) {
+            if (bricksRemaining == 0) {
                 playerWon = true;
                 showPopup = true;
             }
@@ -528,7 +522,7 @@ void displayGame(SDL_Renderer* renderer) {
 
                 SDL_Rect winIconRect = {
                     595,
-                    275,
+                    265,
                     86,
                     86
                 };
@@ -539,7 +533,7 @@ void displayGame(SDL_Renderer* renderer) {
                 SDL_Texture* winTextTexture = SDL_CreateTextureFromSurface(renderer, winTextSurface);
                 SDL_FreeSurface(winTextSurface);
 
-                SDL_Rect winTextRect = {500, 230, winTextSurface->w, winTextSurface->h};
+                SDL_Rect winTextRect = {500, 215, winTextSurface->w, winTextSurface->h};
                 SDL_RenderCopy(renderer, winTextTexture, NULL, &winTextRect);
                 SDL_DestroyTexture(winTextTexture);
 
@@ -547,7 +541,7 @@ void displayGame(SDL_Renderer* renderer) {
 
                 SDL_Rect looseIconRect = {
                     590,
-                    280,
+                    270,
                     86,
                     86
                 };
@@ -555,16 +549,29 @@ void displayGame(SDL_Renderer* renderer) {
                 SDL_RenderCopy(renderer, loseIconTexture, NULL, &looseIconRect);
 
                 char loseMessage[50];
-                sprintf(loseMessage, "You lost  your score %d", score);
+                sprintf(loseMessage, "You lost your score %d", (int)score);
                 SDL_Surface* loseTextSurface = TTF_RenderText_Blended(buttonFont, loseMessage, titleTextColor);
                 SDL_Texture* loseTextTexture = SDL_CreateTextureFromSurface(renderer, loseTextSurface);
                 SDL_FreeSurface(loseTextSurface);
 
-                SDL_Rect loseTextRect = {480, 230, loseTextSurface->w, loseTextSurface->h};
+                SDL_Rect loseTextRect = {480, 215, loseTextSurface->w, loseTextSurface->h};
                 SDL_RenderCopy(renderer, loseTextTexture, NULL, &loseTextRect);
                 SDL_DestroyTexture(loseTextTexture);
 
             } else {
+
+                char pauseMessage[50];
+                sprintf(pauseMessage, "Pause your score %d", (int)score);
+                SDL_Surface* pauseTextSurface = TTF_RenderText_Blended(buttonFont, pauseMessage, titleTextColor);
+                SDL_Texture* pauseTextTexture = SDL_CreateTextureFromSurface(renderer, pauseTextSurface);
+                SDL_FreeSurface(pauseTextSurface);
+
+                SDL_Rect pauseTextRect = {
+                    495,
+                    230,
+                    pauseTextSurface->w,
+                    pauseTextSurface->h
+                };
 
                 SDL_RenderCopy(renderer, pauseTextTexture, NULL, &pauseTextRect);
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
