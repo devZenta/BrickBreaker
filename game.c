@@ -164,8 +164,19 @@ void displayGame(SDL_Renderer* renderer) {
 
     TTF_Font* buttonFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
 
-    SDL_Color titleTextColor = {255, 255, 255, 255};
-    SDL_Color buttonTextColor = {178, 186, 187, 255};
+    SDL_Color titleTextColor = {
+        255,
+        255,
+        255,
+        255
+    };
+
+    SDL_Color buttonTextColor = {
+        178,
+        186,
+        187,
+        255
+    };
 
     SDL_Surface* continueTextSurface = TTF_RenderText_Blended(buttonFont, "Continue", buttonTextColor);
     SDL_Texture* continueTextTexture = SDL_CreateTextureFromSurface(renderer, continueTextSurface);
@@ -299,7 +310,9 @@ void displayGame(SDL_Renderer* renderer) {
     struct brick bricks[ROWS][COLS];
 
     for (int row = 0; row < ROWS; row++) {
+
         for (int col = 0; col < COLS; col++) {
+
             bricks[row][col].rect.x = col * (BRICK_WIDTH + 10) + 50;
             bricks[row][col].rect.y = row * (BRICK_HEIGHT + 10) + 30;
             bricks[row][col].rect.w = BRICK_WIDTH;
@@ -307,6 +320,7 @@ void displayGame(SDL_Renderer* renderer) {
             bricks[row][col].lives = brickLife;
             bricks[row][col].texture = brickTextures[row];
             bricks[row][col].last_hit_time = 0;
+
         }
     }
 
@@ -393,14 +407,18 @@ void displayGame(SDL_Renderer* renderer) {
         if (gameStarted && !showPopup) {
 
             if (moveLeft) {
+
                 paddle.x -= paddle.speed;
+
                 if (paddle.x < 0) {
                     paddle.x = 0;
                 }
             }
 
             if (moveRight) {
+
                 paddle.x += paddle.speed;
+
                 if (paddle.x + PADDLE_WIDTH > SCREEN_WIDTH) {
                     paddle.x = SCREEN_WIDTH - PADDLE_WIDTH;
                 }
@@ -409,15 +427,26 @@ void displayGame(SDL_Renderer* renderer) {
             paddleRect.x = paddle.x;
 
             if (SDL_GetTicks() - lastTimer > 1) {
+
                 ball.x += ball_directionX;
                 ball.y += ball_directionY;
                 lastTimer = SDL_GetTicks();
             }
 
-            if (ball.x <= 0 || ball.x + BALL_SIZE >= SCREEN_WIDTH) ball_directionX = -ball_directionX;
-            if (ball.y <= 0) ball_directionY = -ball_directionY;
+            if (ball.x <= 0 || ball.x + BALL_SIZE >= SCREEN_WIDTH) {
+
+                ball_directionX = -ball_directionX;
+
+            }
+
+            if (ball.y <= 0) {
+
+                ball_directionY = -ball_directionY;
+
+            }
 
             if (check_collision(&ball, &paddleRect)) {
+
                 ball_directionY = -ball_directionY;
 
                 int hit_pos = ball.x + BALL_SIZE / 2 - paddle.x;
@@ -431,18 +460,26 @@ void displayGame(SDL_Renderer* renderer) {
             Uint32 current_time = SDL_GetTicks();
 
             for (int row = 0; row < ROWS; row++) {
+
                 for (int col = 0; col < COLS; col++) {
+
                     struct brick *brick = &bricks[row][col];
+
                     if (brick->lives > 0 && check_collision(&ball, &brick->rect)) {
+
                         if (current_time - brick->last_hit_time > 100) {
+
                             ball_directionY = -ball_directionY;
                             brick->lives--;
                             brick->last_hit_time = current_time;
+
                         }
 
                         if (brick->lives == 0) {
+
                             score += scorePerBrick;
                             bricksRemaining--;
+
                         }
                         break;
                     }
@@ -450,25 +487,31 @@ void displayGame(SDL_Renderer* renderer) {
             }
 
             if (ball.y > SCREEN_HEIGHT) {
+
                 paddle.x = initialPaddleX;
                 ball.x = SCREEN_WIDTH / 2;
                 ball.y = SCREEN_HEIGHT / 2;
                 ball_directionX = (rand() % 2 == 0 ? -ballSpeed : ballSpeed);
                 ball_directionY = -ballSpeed;
                 gameStarted = false;
+
                 if (life > 0) {
                     life--;
                 }
             }
 
             if (life == 0) {
+
                 playerLost = true;
                 showPopup = true;
+
             }
 
             if (bricksRemaining == 0) {
+
                 playerWon = true;
                 showPopup = true;
+
             }
         }
 
@@ -477,9 +520,13 @@ void displayGame(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, texture, NULL, NULL);
 
         for (int row = 0; row < ROWS; row++) {
+
             for (int col = 0; col < COLS; col++) {
+
                 if (bricks[row][col].lives > 0) {
+
                     SDL_RenderCopy(renderer, bricks[row][col].texture, NULL, &bricks[row][col].rect);
+
                 }
             }
         }
@@ -488,7 +535,9 @@ void displayGame(SDL_Renderer* renderer) {
         SDL_RenderFillRect(renderer, &ball);
 
         if (!gameStarted) {
+
             SDL_RenderCopy(renderer, startTexture, NULL, &startRect);
+
         }
 
         SDL_RenderCopy(renderer, paddle.texture, NULL, &paddleRect);
@@ -496,13 +545,19 @@ void displayGame(SDL_Renderer* renderer) {
        SDL_RenderCopy(renderer, selectedEmoticonTexture, NULL, &emoticonRect);
 
         if (life >= 1) {
+
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life1IconRect);
+
         }
         if (life >= 2) {
+
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life2IconRect);
+
         }
         if (life >= 3) {
+
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life3IconRect);
+
         }
 
         if (showPopup) {
@@ -533,7 +588,13 @@ void displayGame(SDL_Renderer* renderer) {
                 SDL_Texture* winTextTexture = SDL_CreateTextureFromSurface(renderer, winTextSurface);
                 SDL_FreeSurface(winTextSurface);
 
-                SDL_Rect winTextRect = {500, 215, winTextSurface->w, winTextSurface->h};
+                SDL_Rect winTextRect = {
+                    500,
+                    215,
+                    winTextSurface->w,
+                    winTextSurface->h
+                };
+
                 SDL_RenderCopy(renderer, winTextTexture, NULL, &winTextRect);
                 SDL_DestroyTexture(winTextTexture);
 
@@ -554,7 +615,13 @@ void displayGame(SDL_Renderer* renderer) {
                 SDL_Texture* loseTextTexture = SDL_CreateTextureFromSurface(renderer, loseTextSurface);
                 SDL_FreeSurface(loseTextSurface);
 
-                SDL_Rect loseTextRect = {480, 215, loseTextSurface->w, loseTextSurface->h};
+                SDL_Rect loseTextRect = {
+                    480,
+                    215,
+                    loseTextSurface->w,
+                    loseTextSurface->h
+                };
+
                 SDL_RenderCopy(renderer, loseTextTexture, NULL, &loseTextRect);
                 SDL_DestroyTexture(loseTextTexture);
 

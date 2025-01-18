@@ -18,16 +18,6 @@ struct paddle {
     SDL_Texture* texture;
 };
 
-
-/*struct brick {
-    int x;
-    int y;
-    int h;
-    int w;
-    int life;
-    SDL_Texture* texture;
-};*/
-
 struct brick {
     SDL_Rect rect;
     int lives;
