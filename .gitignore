@@ -4,9 +4,3 @@ cmake-build-debug/*
 
 !cmake-build-debug/resources/
 !cmake-build-debug/resources/**
-
-!cmake-build-debug/Content/
-!cmake-build-debug/Content/**
-
-!cmake-build-debug/CMakeFiles/
-!cmake-build-debug/CMakeFiles/**
