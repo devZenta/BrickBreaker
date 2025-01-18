@@ -234,7 +234,7 @@ int displayMenu(SDL_Renderer* renderer){
         .h = 64
     };
 
-    SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerFont, "Need more help ?", textColor);
+    SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerFont, "Need more help", textColor);
 
     if (!helpTextSurface) {
         printf("Failed to load helpTextSurface: %s\n", IMG_GetError());
@@ -252,6 +252,19 @@ int displayMenu(SDL_Renderer* renderer){
         .y = helpButtonRect.y + (helpButtonRect.h - helpTextSurface->h) / 2,
         .w = helpTextSurface->w,
         .h = helpTextSurface->h
+    };
+
+    TTF_Font* historyFont = TTF_OpenFont("resources/assets/fonts/CONSOLAB.ttf", 45);
+
+    SDL_Surface* historyTextSurface = TTF_RenderText_Blended(historyFont, "Display for game history is in development...", textColor);
+    SDL_Texture* historyTextTexture = SDL_CreateTextureFromSurface(renderer, historyTextSurface);
+    SDL_FreeSurface(historyTextSurface);
+
+    SDL_Rect historyTextRect = {
+        .x = 80,
+        .y = 280,
+        .w = historyTextSurface->w,
+        .h = historyTextSurface->h
     };
 
     SDL_bool quit = false;
@@ -331,6 +344,8 @@ int displayMenu(SDL_Renderer* renderer){
         SDL_RenderCopy(renderer, play_button_texture, NULL, &playButtonRect);
         SDL_RenderCopy(renderer, settings_button_texture, NULL, &settingsButtonRect);
         SDL_RenderCopy(renderer, exit_button_texture, NULL, &exitButtonRect);
+
+        SDL_RenderCopy(renderer, historyTextTexture, NULL, &historyTextRect);
 
         SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);

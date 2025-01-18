@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <direct.h>
+#include <time.h>
 
 void ensure_config_directory() {
 
@@ -135,4 +136,121 @@ void load_settings(int *difficulty, int *volume) {
 
         }
     }
+}
+
+void difficulty_to_string(int difficulty, char *difficulty_str) {
+
+    switch (difficulty) {
+
+        case 1:
+            strcpy(difficulty_str, "Easy");
+        break;
+
+        case 2:
+            strcpy(difficulty_str, "Medium");
+        break;
+
+        case 3:
+            strcpy(difficulty_str, "Hard");
+        break;
+
+        default:
+            strcpy(difficulty_str, "Unknown");
+        break;
+    }
+}
+
+int string_to_difficulty(const char *difficulty_str) {
+
+    if (strcmp(difficulty_str, "Easy") == 0) return 1;
+
+    if (strcmp(difficulty_str, "Medium") == 0) return 2;
+
+    if (strcmp(difficulty_str, "Hard") == 0) return 3;
+
+    return -1;
+}
+
+void load_last_games(struct Game games[3], int *game_count) {
+
+    ensure_config_directory();
+
+    FILE *file = fopen("config/leaderboard.txt", "r");
+    *game_count = 0;
+
+    if (file != NULL) {
+
+        char difficulty_str[DIFFICULTY_LENGTH];
+        while (fscanf(file, "%d %49s %19[^\n]",
+                      &games[*game_count].score,
+                      difficulty_str,
+                      games[*game_count].date) == 3) {
+
+            games[*game_count].difficulty = string_to_difficulty(difficulty_str);
+            (*game_count)++;
+
+            if (*game_count >= 3) break;
+                      }
+
+        fclose(file);
+    }
+}
+
+void save_last_games(struct Game games[3], int game_count) {
+
+    ensure_config_directory();
+
+    FILE *file = fopen("config/leaderboard.txt", "w");
+
+    if (file != NULL) {
+
+        char difficulty_str[DIFFICULTY_LENGTH];
+
+        for (int i = 0; i < game_count; i++) {
+
+            difficulty_to_string(games[i].difficulty, difficulty_str);
+            fprintf(file, "%d %s %s\n", games[i].score, difficulty_str, games[i].date);
+
+        }
+
+        fclose(file);
+
+    } else {
+
+        printf("Error: Unable to save leaderboard data.\n");
+
+    }
+}
+
+void add_game(struct Game new_game) {
+
+    struct Game games[3];
+    int game_count;
+
+    load_last_games(games, &game_count);
+
+    if (game_count < 3) {
+
+        games[game_count] = new_game;
+        game_count++;
+
+    } else {
+
+        for (int i = 1; i < 3; i++) {
+
+            games[i - 1] = games[i];
+
+        }
+
+        games[2] = new_game;
+    }
+
+    save_last_games(games, game_count);
+}
+
+void get_current_datetime(char *buffer, size_t buffer_size) {
+
+    time_t now = time(NULL);
+    struct tm *timeinfo = localtime(&now);
+    strftime(buffer, buffer_size, "%Y-%m-%d %H:%M:%S", timeinfo);
 }

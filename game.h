@@ -6,7 +6,7 @@
 #define GAME_H
 
 #include <SDL.h>
-#include <windows.h>
+#include <stdbool.h>
 
 struct paddle {
     int x;
@@ -14,7 +14,6 @@ struct paddle {
     int h;
     int w;
     int speed;
-    boolean invisible;
     SDL_Texture* texture;
 };
 

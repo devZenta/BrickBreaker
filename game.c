@@ -40,10 +40,13 @@ void displayGame(SDL_Renderer* renderer) {
     int life;
     int ballSpeed;
     int paddleSpeed;
-    bool invisiblePaddle;
+
+    bool isProtected = false;
+    bool canShoot = false;
 
     float score = 0.0f;
     int bricksRemaining = ROWS * COLS;
+    int destroyedBricks = 0;
     const float scorePerBrick = 100.0f / (ROWS * COLS);
 
     bool playerWon = false;
@@ -57,7 +60,6 @@ void displayGame(SDL_Renderer* renderer) {
         life = 3;
         ballSpeed = 4;
         paddleSpeed = 10;
-        invisiblePaddle = false;
 
     } else if (selectedDifficulty == 2) {
 
@@ -65,7 +67,6 @@ void displayGame(SDL_Renderer* renderer) {
         life = 2;
         ballSpeed = 6;
         paddleSpeed = 30;
-        invisiblePaddle = false;
 
     } else if (selectedDifficulty == 3) {
 
@@ -73,7 +74,6 @@ void displayGame(SDL_Renderer* renderer) {
         life = 1;
         ballSpeed = 8;
         paddleSpeed = 50;
-        invisiblePaddle = true;
 
     }
 
@@ -91,7 +91,6 @@ void displayGame(SDL_Renderer* renderer) {
         PADDLE_HEIGHT,
         PADDLE_WIDTH,
         paddleSpeed,
-        invisiblePaddle,
         paddleTexture
     };
 
@@ -282,6 +281,17 @@ void displayGame(SDL_Renderer* renderer) {
         .h = 64
     };
 
+    SDL_Surface* shieldIconSurface = IMG_Load("resources/assets/img/icons/shield.png");
+    SDL_Texture* shieldIconTexture = SDL_CreateTextureFromSurface(renderer, shieldIconSurface);
+    SDL_FreeSurface(shieldIconSurface);
+
+    SDL_Rect shieldIconRect = {
+        .x = 150,
+        .y = emoticonRect.y - 5,
+        .w = 68,
+        .h = 68
+    };
+
     SDL_Surface* winIconSurface = IMG_Load("resources/assets/img/icons/win.png");
     SDL_Texture* winIconTexture = SDL_CreateTextureFromSurface(renderer, winIconSurface);
     SDL_FreeSurface(winIconSurface);
@@ -340,7 +350,7 @@ void displayGame(SDL_Renderer* renderer) {
 
             if (event.type == SDL_QUIT) {
 
-                quit = SDL_TRUE;
+                showPopup = true;
 
             } else if (event.type == SDL_KEYDOWN) {
 
@@ -479,7 +489,17 @@ void displayGame(SDL_Renderer* renderer) {
 
                             score += scorePerBrick;
                             bricksRemaining--;
+                            destroyedBricks++;
 
+                            if (destroyedBricks >= 10) {
+
+                                isProtected = true;
+
+                                if (destroyedBricks >= 20) {
+                                    canShoot = true;
+
+                                }
+                            }
                         }
                         break;
                     }
@@ -496,11 +516,30 @@ void displayGame(SDL_Renderer* renderer) {
                 gameStarted = false;
 
                 if (life > 0) {
-                    life--;
+
+                    if (isProtected) {
+
+                        isProtected = false;
+                        destroyedBricks = 0;
+
+                    } else {
+
+                        life--;
+
+                    }
                 }
             }
 
             if (life == 0) {
+
+                struct Game new_game;
+
+                new_game.score = (int)score;
+                new_game.difficulty = selectedDifficulty;
+
+                get_current_datetime(new_game.date, DATE_LENGTH);
+
+                add_game(new_game);
 
                 playerLost = true;
                 showPopup = true;
@@ -508,6 +547,15 @@ void displayGame(SDL_Renderer* renderer) {
             }
 
             if (bricksRemaining == 0) {
+
+                struct Game new_game;
+
+                new_game.score = (int)score;
+                new_game.difficulty = selectedDifficulty;
+
+                get_current_datetime(new_game.date, DATE_LENGTH);
+
+                add_game(new_game);
 
                 playerWon = true;
                 showPopup = true;
@@ -549,14 +597,22 @@ void displayGame(SDL_Renderer* renderer) {
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life1IconRect);
 
         }
+
         if (life >= 2) {
 
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life2IconRect);
 
         }
+
         if (life >= 3) {
 
             SDL_RenderCopy(renderer, lifeIconTexture, NULL, &life3IconRect);
+
+        }
+
+        if (isProtected) {
+
+            SDL_RenderCopy(renderer, shieldIconTexture, NULL, &shieldIconRect);
 
         }
 

@@ -385,6 +385,19 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         .h = textCreatorSurface->h
     };
 
+    TTF_Font* infoFont = TTF_OpenFont("resources/assets/fonts/CONSOLAB.ttf", 20);
+
+    SDL_Surface* infoTextSurface = TTF_RenderText_Blended(infoFont, "The sound of the game is in development...", textColor);
+    SDL_Texture* infoTextTexture = SDL_CreateTextureFromSurface(renderer, infoTextSurface);
+    SDL_FreeSurface(infoTextSurface);
+
+    SDL_Rect infoTextRect = {
+        .x = 390,
+        .y = 635,
+        .w = infoTextSurface->w,
+        .h = infoTextSurface->h
+    };
+
     SDL_bool quit = false;
     bool leave = false;
     bool back = false;
@@ -477,6 +490,8 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
         SDL_RenderCopy(renderer, volume ? enableVolumeTexture : disableVolumeTexture, NULL, &volumeTextRect);
         SDL_RenderCopy(renderer, volume ? volumeOnTexture : volumeOffTexture, NULL, &volumeButtonRect);
+
+        SDL_RenderCopy(renderer, infoTextTexture, NULL, &infoTextRect);
 
         SDL_RenderCopy(renderer, iconDevTexture, NULL, &iconDevRect);
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
