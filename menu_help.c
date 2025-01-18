@@ -538,7 +538,7 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
                     return 0;
 
-                } else if (SDL_PointInRect(&mousePoint, &githubButtonRect)) {
+                } else if (SDL_PointInRect(&mousePoint, &githubButtonRect) || SDL_PointInRect(&mousePoint, &githubTextRect)) {
 
                     ShellExecute(0, 0, "https://github.com/devZenta/BrickBreaker", 0, 0, SW_SHOW);
                 }
