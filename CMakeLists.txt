@@ -20,8 +20,6 @@ add_executable(BrickBreaker main.c
         menu.h
         game.c
         game.h
-        history.c
-        history.h
         utils.c
         utils.h
         menu_settings.c
