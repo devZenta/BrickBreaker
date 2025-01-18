@@ -27,6 +27,10 @@
 #define ROWS 5
 #define COLS 11
 
+#define MAX_PROJECTILES 10
+
+struct projectile projectiles[MAX_PROJECTILES];
+
 
 void displayGame(SDL_Renderer* renderer) {
 
@@ -43,6 +47,10 @@ void displayGame(SDL_Renderer* renderer) {
 
     bool isProtected = false;
     bool canShoot = false;
+
+    bool projectileUsed = false;
+
+    int currentProjectile = 0;
 
     float score = 0.0f;
     int bricksRemaining = ROWS * COLS;
@@ -286,7 +294,18 @@ void displayGame(SDL_Renderer* renderer) {
     SDL_FreeSurface(shieldIconSurface);
 
     SDL_Rect shieldIconRect = {
-        .x = 150,
+        .x = 145,
+        .y = emoticonRect.y - 5,
+        .w = 68,
+        .h = 68
+    };
+
+    SDL_Surface* crosshairIconSurface = IMG_Load("resources/assets/img/icons/crosshair.png");
+    SDL_Texture* crosshairIconTexture = SDL_CreateTextureFromSurface(renderer, crosshairIconSurface);
+    SDL_FreeSurface(crosshairIconSurface);
+
+    SDL_Rect crosshairIconRect = {
+        .x = 230,
         .y = emoticonRect.y - 5,
         .w = 68,
         .h = 68
@@ -334,6 +353,15 @@ void displayGame(SDL_Renderer* renderer) {
         }
     }
 
+    for (int i = 0; i < MAX_PROJECTILES; i++) {
+        projectiles[i].rect.w = 10;
+        projectiles[i].rect.h = 20;
+        projectiles[i].rect.x = 0;
+        projectiles[i].rect.y = 0;
+        projectiles[i].speed = -8;
+        projectiles[i].active = false;
+    }
+
     bool gameStarted = false;
     bool showPopup = false;
 
@@ -361,6 +389,28 @@ void displayGame(SDL_Renderer* renderer) {
                 } else if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
 
                     moveRight = true;
+
+                } else if (event.key.keysym.sym == SDLK_SPACE && canShoot && !projectileUsed) {
+
+                    for (int i = 0; i < MAX_PROJECTILES; i++) {
+
+                        if (!projectiles[i].active) {
+
+                            projectiles[i].rect.x = paddle.x + paddle.w / 2 - projectiles[i].rect.w / 2;
+                            projectiles[i].rect.y = paddle.y - projectiles[i].rect.h;
+                            projectiles[i].active = true;
+                            currentProjectile++;
+                            break;
+
+                        }
+                    }
+
+                    if (currentProjectile == MAX_PROJECTILES) {
+
+                        canShoot = false;
+                        projectileUsed = true;
+
+                    }
 
                 } else if (event.key.keysym.sym == SDLK_ESCAPE) {
 
@@ -491,17 +541,62 @@ void displayGame(SDL_Renderer* renderer) {
                             bricksRemaining--;
                             destroyedBricks++;
 
-                            if (destroyedBricks >= 10) {
-
-                                isProtected = true;
-
-                                if (destroyedBricks >= 20) {
-                                    canShoot = true;
-
-                                }
-                            }
                         }
                         break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < MAX_PROJECTILES; i++) {
+
+                if (projectiles[i].active) {
+
+                    for (int row = 0; row < ROWS; row++) {
+
+                        for (int col = 0; col < COLS; col++) {
+
+                            struct brick* brick = &bricks[row][col];
+
+                            if (brick->lives > 0 && check_collision(&projectiles[i].rect, &brick->rect)) {
+
+                                brick->lives--;
+                                projectiles[i].active = false;
+
+                                if (brick->lives == 0) {
+
+                                    score += scorePerBrick;
+                                    bricksRemaining--;
+                                    destroyedBricks++;
+
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (destroyedBricks >= 10) {
+
+                isProtected = true;
+            }
+
+            if (destroyedBricks >= 20) {
+
+                canShoot = true;
+
+            }
+
+            for (int i = 0; i < MAX_PROJECTILES; i++) {
+
+                if (projectiles[i].active) {
+
+                    projectiles[i].rect.y += projectiles[i].speed;
+
+                    if (projectiles[i].rect.y < 0) {
+
+                        projectiles[i].active = false;
+
                     }
                 }
             }
@@ -614,6 +709,22 @@ void displayGame(SDL_Renderer* renderer) {
 
             SDL_RenderCopy(renderer, shieldIconTexture, NULL, &shieldIconRect);
 
+        }
+
+        if (canShoot && !projectileUsed) {
+
+            SDL_RenderCopy(renderer, crosshairIconTexture, NULL, &crosshairIconRect);
+
+        }
+
+        for (int i = 0; i < MAX_PROJECTILES; i++) {
+
+            if (projectiles[i].active) {
+
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                SDL_RenderFillRect(renderer, &projectiles[i].rect);
+
+            }
         }
 
         if (showPopup) {

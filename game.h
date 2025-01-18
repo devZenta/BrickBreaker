@@ -24,6 +24,12 @@ struct brick {
     Uint32 last_hit_time;
 };
 
+struct projectile {
+    SDL_Rect rect;
+    int speed;
+    bool active;
+};
+
 void displayGame(SDL_Renderer* renderer);
 
 #endif //GAME_H

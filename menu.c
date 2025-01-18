@@ -267,7 +267,7 @@ int displayMenu(SDL_Renderer* renderer){
         .h = historyTextSurface->h
     };
 
-    SDL_bool quit = false;
+    SDL_bool quit = SDL_FALSE;
     bool game = false;
     bool settings = false;
     bool help = false;
@@ -280,7 +280,7 @@ int displayMenu(SDL_Renderer* renderer){
 
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
 
-                return 0;
+                quit = SDL_TRUE;
 
             } else if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
 
@@ -318,20 +318,17 @@ int displayMenu(SDL_Renderer* renderer){
         if (game) {
 
             displayGame(renderer);
-            quit = true;
-            return 1;
+            quit = SDL_TRUE;
 
         } else if (settings) {
 
             displaySettingsMenu(renderer);
-            quit = true;
-            return 1;
+            quit = SDL_TRUE;
 
         } else if (help) {
 
             displayHelpMenu(renderer);
-            quit = true;
-            return 1;
+            quit = SDL_TRUE;
 
         }
 

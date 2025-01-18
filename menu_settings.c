@@ -398,7 +398,7 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         .h = infoTextSurface->h
     };
 
-    SDL_bool quit = false;
+    SDL_bool quit = SDL_FALSE;
     bool leave = false;
     bool back = false;
 
@@ -410,7 +410,7 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
             if (event.type == SDL_QUIT) {
 
-                return 0;
+                quit = SDL_TRUE;
 
             } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
 
@@ -457,13 +457,16 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         }
 
         if (leave) {
+
             displayMenu(renderer);
-            quit = true;
-            return 1;
+            quit = SDL_TRUE;
+
+
         } else if (back) {
+
             displayMenu(renderer);
-            quit = true;
-            return 1;
+            quit = SDL_TRUE;
+
         }
 
         SDL_RenderClear(renderer);
