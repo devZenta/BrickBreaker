@@ -827,4 +827,27 @@ void displayGame(SDL_Renderer* renderer) {
         SDL_RenderPresent(renderer);
         SDL_Delay(16);
     }
+
+    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(paddle.texture);
+    SDL_DestroyTexture(startTexture);
+    SDL_DestroyTexture(continueTextTexture);
+    SDL_DestroyTexture(quitTextTexture);
+    SDL_DestroyTexture(restartTextTexture);
+    SDL_DestroyTexture(menuTextTexture);
+    SDL_DestroyTexture(easyEmoticonTexture);
+    SDL_DestroyTexture(mediumEmoticonTexture);
+    SDL_DestroyTexture(hardEmoticonTexture);
+    SDL_DestroyTexture(lifeIconTexture);
+    SDL_DestroyTexture(shieldIconTexture);
+    SDL_DestroyTexture(crosshairIconTexture);
+    SDL_DestroyTexture(winIconTexture);
+    SDL_DestroyTexture(loseIconTexture);
+
+    for (int i = 0; i < ROWS; i++) {
+        SDL_DestroyTexture(brickTextures[i]);
+    }
+
+    TTF_CloseFont(font);
+    TTF_CloseFont(buttonFont);
 }

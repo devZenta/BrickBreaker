@@ -7,6 +7,6 @@
 
 #include <SDL.h>
 
-int displayMenu(SDL_Renderer *renderer);
+void displayMenu(SDL_Renderer *renderer);
 
 #endif //MENU_H

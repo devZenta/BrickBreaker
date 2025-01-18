@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <windows.h>
 
-int displaySettingsMenu(SDL_Renderer* renderer) {
+void displaySettingsMenu(SDL_Renderer* renderer) {
 
     int selectedDifficulty, volume;
 
@@ -451,7 +451,7 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
 
                 } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
 
-                    return 0;
+                    quit = SDL_TRUE;
                 }
             }
         }
@@ -500,5 +500,33 @@ int displaySettingsMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
 
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
+
+    SDL_DestroyTexture(titleTexture);
+    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(easy_level_texture);
+    SDL_DestroyTexture(medium_level_texture);
+    SDL_DestroyTexture(hard_level_texture);
+    SDL_DestroyTexture(back_button_texture);
+    SDL_DestroyTexture(exit_button_texture);
+    SDL_DestroyTexture(chooseDifficultyTexture);
+    SDL_DestroyTexture(easyTextTexture);
+    SDL_DestroyTexture(mediumTextTexture);
+    SDL_DestroyTexture(hardTextTexture);
+    SDL_DestroyTexture(checkboxUncheckedTexture);
+    SDL_DestroyTexture(checkboxCheckedTexture);
+    SDL_DestroyTexture(volumeOnTexture);
+    SDL_DestroyTexture(volumeOffTexture);
+    SDL_DestroyTexture(enableVolumeTexture);
+    SDL_DestroyTexture(disableVolumeTexture);
+    SDL_DestroyTexture(infoTextTexture);
+    SDL_DestroyTexture(iconDevTexture);
+    SDL_DestroyTexture(textCreatorTexture);
+
+    TTF_CloseFont(font);
+    TTF_CloseFont(instructionsTextFont);
+    TTF_CloseFont(textLevelFont);
+    TTF_CloseFont(footerFont);
+    TTF_CloseFont(infoFont);
 }

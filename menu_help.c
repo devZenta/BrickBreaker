@@ -13,7 +13,7 @@
 #include <stdbool.h>
 #include <windows.h>
 
-int displayHelpMenu(SDL_Renderer* renderer) {
+void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
@@ -536,7 +536,7 @@ int displayHelpMenu(SDL_Renderer* renderer) {
 
                 } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
 
-                    return 0;
+                    quit = SDL_TRUE;
 
                 } else if (SDL_PointInRect(&mousePoint, &githubButtonRect) || SDL_PointInRect(&mousePoint, &githubTextRect)) {
 
@@ -598,5 +598,40 @@ int displayHelpMenu(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, textCreatorTexture, NULL, &textCreatorRect);
 
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
+
+    SDL_DestroyTexture(titleTexture);
+    SDL_DestroyTexture(howToPlayTitleTexture);
+    SDL_DestroyTexture(followInstructionsTitleTexture);
+    SDL_DestroyTexture(doNotModifyTexture);
+    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(back_button_texture);
+    SDL_DestroyTexture(exit_button_texture);
+    SDL_DestroyTexture(iconDevTexture);
+    SDL_DestroyTexture(textCreatorTexture);
+    SDL_DestroyTexture(howToPlayIconTexture);
+    SDL_DestroyTexture(ruleIconTexture);
+    SDL_DestroyTexture(followInstructionsIconTexture);
+    SDL_DestroyTexture(rule1Texture);
+    SDL_DestroyTexture(rule2Texture);
+    SDL_DestroyTexture(rule3Texture);
+    SDL_DestroyTexture(rule4Texture);
+    SDL_DestroyTexture(pinIconTexture);
+    SDL_DestroyTexture(instructionTexture);
+    SDL_DestroyTexture(folderTexture);
+    SDL_DestroyTexture(rightArrowIconTexture);
+    SDL_DestroyTexture(githubButtonTexture);
+    SDL_DestroyTexture(githubTextTexture);
+    SDL_DestroyTexture(bubbleTexture);
+    SDL_DestroyTexture(githubCharacterTexture);
+    SDL_DestroyTexture(opinionTextTexture1);
+    SDL_DestroyTexture(opinionTextTexture2);
+    SDL_DestroyTexture(opinionTextTexture3);
+
+    TTF_CloseFont(font);
+    TTF_CloseFont(subtitleFont);
+    TTF_CloseFont(textFont);
+    TTF_CloseFont(footerFont);
+    TTF_CloseFont(bubbleFont);
 }

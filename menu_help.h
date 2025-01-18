@@ -7,6 +7,6 @@
 
 #include <SDL.h>
 
-int displayHelpMenu(SDL_Renderer* renderer);
+void displayHelpMenu(SDL_Renderer* renderer);
 
 #endif //HELP_H

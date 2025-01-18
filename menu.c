@@ -16,16 +16,18 @@
 #include <windows.h>
 
 
-int displayMenu(SDL_Renderer* renderer){
+void displayMenu(SDL_Renderer* renderer){
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
+        return;
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
 
     if (!font) {
         printf("Failed to load font: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Color textColor = {
@@ -39,6 +41,8 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!titleSurface) {
         printf("Failed to create title surface: %s\n", TTF_GetError());
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
@@ -46,6 +50,8 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!titleTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect titleRect = {
@@ -59,6 +65,9 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!background_menu) {
         printf("Failed to load background image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
@@ -66,12 +75,19 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!texture) {
         printf("Failed to create texture from surface: %s\n", SDL_GetError());
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Surface *play_button_surface = IMG_Load("resources/assets/img/buttons/play_button.png");
 
     if (!play_button_surface) {
         printf("Failed to load play button image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture *play_button_texture = SDL_CreateTextureFromSurface(renderer, play_button_surface);
@@ -79,6 +95,10 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!play_button_texture) {
         printf("Failed to create play button texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect playButtonRect = {
@@ -92,6 +112,11 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!settings_button_surface) {
         printf("Failed to load settings button image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture *settings_button_texture = SDL_CreateTextureFromSurface(renderer, settings_button_surface);
@@ -99,6 +124,11 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!settings_button_texture) {
         printf("Failed to create settings button texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect settingsButtonRect = {
@@ -112,6 +142,12 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!exit_button_surface) {
         printf("Failed to load exit button image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture *exit_button_texture = SDL_CreateTextureFromSurface(renderer, exit_button_surface);
@@ -119,6 +155,12 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!exit_button_texture) {
         printf("Failed to create exit button texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect exitButtonRect = {
@@ -132,6 +174,13 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!iconDevSurface) {
         printf("Failed to load dev icon image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
@@ -139,6 +188,13 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!iconDevTexture) {
         printf("Failed to create dev icon texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect iconDevRect = {
@@ -152,12 +208,29 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!footerFont) {
         printf("Failed to load footerFont: %s\n", TTF_GetError());
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
 
     if (!textCreatorSurface) {
-        printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
+        printf("Failed to load textCreatorSurface: %s\n", TTF_GetError());
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
@@ -165,6 +238,15 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!textCreatorTexture) {
         printf("Failed to create creator text texture: %s\n", SDL_GetError());
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect textCreatorRect = {
@@ -178,6 +260,16 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubButtonSurface) {
         printf("Failed to load GitHub icon image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* githubButtonTexture = SDL_CreateTextureFromSurface(renderer, githubButtonSurface);
@@ -185,6 +277,16 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubButtonTexture) {
         printf("Failed to create GitHub button texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect githubButtonRect = {
@@ -197,7 +299,18 @@ int displayMenu(SDL_Renderer* renderer){
     SDL_Surface* githubTextSurface = TTF_RenderText_Blended(footerFont, "click on me", textColor);
 
     if (!githubTextSurface) {
-        printf("Failed to load githubTextSurface: %s\n", IMG_GetError());
+        printf("Failed to load githubTextSurface: %s\n", TTF_GetError());
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* githubTextTexture = SDL_CreateTextureFromSurface(renderer, githubTextSurface);
@@ -205,6 +318,17 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!githubTextTexture) {
         printf("Failed to create GitHub text texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect githubTextRect = {
@@ -218,6 +342,18 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpButtonSurface) {
         printf("Failed to load help button image: %s\n", IMG_GetError());
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* helpButtonTexture = SDL_CreateTextureFromSurface(renderer, helpButtonSurface);
@@ -225,6 +361,18 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpButtonTexture) {
         printf("Failed to create help button texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect helpButtonRect = {
@@ -237,7 +385,20 @@ int displayMenu(SDL_Renderer* renderer){
     SDL_Surface* helpTextSurface = TTF_RenderText_Blended(footerFont, "Need more help", textColor);
 
     if (!helpTextSurface) {
-        printf("Failed to load helpTextSurface: %s\n", IMG_GetError());
+        printf("Failed to load helpTextSurface: %s\n", TTF_GetError());
+        SDL_DestroyTexture(helpButtonTexture);
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Texture* helpTextTexture = SDL_CreateTextureFromSurface(renderer, helpTextSurface);
@@ -245,6 +406,19 @@ int displayMenu(SDL_Renderer* renderer){
 
     if (!helpTextTexture) {
         printf("Failed to create help text texture: %s\n", SDL_GetError());
+        SDL_DestroyTexture(helpButtonTexture);
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
     }
 
     SDL_Rect helpTextRect = {
@@ -256,9 +430,66 @@ int displayMenu(SDL_Renderer* renderer){
 
     TTF_Font* historyFont = TTF_OpenFont("resources/assets/fonts/CONSOLAB.ttf", 45);
 
+    if (!historyFont) {
+        printf("Failed to load historyFont: %s\n", TTF_GetError());
+        SDL_DestroyTexture(helpTextTexture);
+        SDL_DestroyTexture(helpButtonTexture);
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
+    }
+
     SDL_Surface* historyTextSurface = TTF_RenderText_Blended(historyFont, "Display for game history is in development...", textColor);
+
+    if (!historyTextSurface) {
+        printf("Failed to load historyTextSurface: %s\n", TTF_GetError());
+        TTF_CloseFont(historyFont);
+        SDL_DestroyTexture(helpTextTexture);
+        SDL_DestroyTexture(helpButtonTexture);
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
+    }
+
     SDL_Texture* historyTextTexture = SDL_CreateTextureFromSurface(renderer, historyTextSurface);
     SDL_FreeSurface(historyTextSurface);
+
+    if (!historyTextTexture) {
+        printf("Failed to create history text texture: %s\n", SDL_GetError());
+        TTF_CloseFont(historyFont);
+        SDL_DestroyTexture(helpTextTexture);
+        SDL_DestroyTexture(helpButtonTexture);
+        SDL_DestroyTexture(githubTextTexture);
+        SDL_DestroyTexture(githubButtonTexture);
+        SDL_DestroyTexture(textCreatorTexture);
+        TTF_CloseFont(footerFont);
+        SDL_DestroyTexture(iconDevTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(settings_button_texture);
+        SDL_DestroyTexture(play_button_texture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(titleTexture);
+        TTF_CloseFont(font);
+        return;
+    }
 
     SDL_Rect historyTextRect = {
         .x = 80,
@@ -300,7 +531,7 @@ int displayMenu(SDL_Renderer* renderer){
 
                 } else if (SDL_PointInRect(&mousePoint, &exitButtonRect)) {
 
-                    return 0;
+                    quit = SDL_TRUE;
 
                 } else if (SDL_PointInRect(&mousePoint, &githubButtonRect) || SDL_PointInRect(&mousePoint, &githubTextRect)) {
 
@@ -354,5 +585,23 @@ int displayMenu(SDL_Renderer* renderer){
         SDL_RenderCopy(renderer, helpTextTexture, NULL, &helpTextRect);
 
         SDL_RenderPresent(renderer);
+        SDL_Delay(16);
     }
+
+    SDL_DestroyTexture(titleTexture);
+    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(play_button_texture);
+    SDL_DestroyTexture(settings_button_texture);
+    SDL_DestroyTexture(exit_button_texture);
+    SDL_DestroyTexture(iconDevTexture);
+    SDL_DestroyTexture(textCreatorTexture);
+    SDL_DestroyTexture(githubButtonTexture);
+    SDL_DestroyTexture(githubTextTexture);
+    SDL_DestroyTexture(helpButtonTexture);
+    SDL_DestroyTexture(helpTextTexture);
+    SDL_DestroyTexture(historyTextTexture);
+
+    TTF_CloseFont(font);
+    TTF_CloseFont(footerFont);
+    TTF_CloseFont(historyFont);
 }
