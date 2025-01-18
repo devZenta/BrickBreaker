@@ -293,7 +293,7 @@ int displayMenu(SDL_Renderer* renderer){
 
                     ShellExecute(0, 0, "https://github.com/devZenta/BrickBreaker", 0, 0, SW_SHOW);
 
-                } else if (SDL_PointInRect(&mousePoint, &helpButtonRect)) {
+                } else if (SDL_PointInRect(&mousePoint, &helpButtonRect) || SDL_PointInRect(&mousePoint, &helpTextRect)) {
 
                     printf("Help clicked\n");
                     help = true;
@@ -302,18 +302,24 @@ int displayMenu(SDL_Renderer* renderer){
             }
         }
 
-        if(game){
+        if (game) {
+
             displayGame(renderer);
             quit = true;
             return 1;
-        } else if(settings){
+
+        } else if (settings) {
+
             displaySettingsMenu(renderer);
             quit = true;
             return 1;
-        } else if (help){
+
+        } else if (help) {
+
             displayHelpMenu(renderer);
             quit = true;
             return 1;
+
         }
 
         SDL_RenderClear(renderer);
