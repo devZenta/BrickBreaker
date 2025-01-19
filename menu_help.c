@@ -17,6 +17,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
+        return;
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
@@ -25,6 +26,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!font || !subtitleFont || !textFont) {
         printf("Failed to load font: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
@@ -37,6 +39,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!titleSurface || !howToPlayTitleSurface || !followInstructionsTitleSurface || !doNotModifySurface) {
         printf("Failed to create title surface: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
@@ -50,6 +53,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!titleTexture || !howToPlayTitleTexture || !followInstructionsTitleTexture || !doNotModifyTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect titleRect = {
@@ -84,6 +88,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!background_menu) {
         printf("Failed to load background image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
@@ -91,12 +96,14 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!texture) {
         printf("Failed to create texture from surface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Surface *back_button_surface = IMG_Load("resources/assets/img/buttons/back_button.png");
 
     if (!back_button_surface) {
         printf("Failed to load back button image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *back_button_texture = SDL_CreateTextureFromSurface(renderer, back_button_surface);
@@ -104,6 +111,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!back_button_texture) {
         printf("Failed to create back button texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect backButtonRect = {
@@ -117,6 +125,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!exit_button_surface) {
         printf("Failed to load exit button image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *exit_button_texture = SDL_CreateTextureFromSurface(renderer, exit_button_surface);
@@ -124,6 +133,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!exit_button_texture) {
         printf("Failed to create exit button texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect exitButtonRect = {
@@ -137,6 +147,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!iconDevSurface) {
         printf("Failed to load dev icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
@@ -144,6 +155,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!iconDevTexture) {
         printf("Failed to create dev icon texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect iconDevRect = {
@@ -157,12 +169,14 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!footerFont) {
         printf("Failed to load footerFont: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "By zenta ", textColor);
 
     if (!textCreatorSurface) {
         printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
@@ -170,6 +184,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!textCreatorTexture) {
         printf("Failed to create creator text texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect textCreatorRect = {
@@ -185,6 +200,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!howToPlayIconSurface || !ruleIconSurface || !followInstructionsIconSurface) {
         printf("Failed to load icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* howToPlayIconTexture = SDL_CreateTextureFromSurface(renderer, howToPlayIconSurface);
@@ -196,6 +212,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!howToPlayIconTexture || !ruleIconTexture || !followInstructionsIconTexture) {
         printf("Failed to create icon texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect howToPlayIconRect = {
@@ -219,6 +236,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!rule1Surface || !rule2Surface || !rule3Surface || !rule4Surface) {
         printf("Failed to create rule surface: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Texture* rule1Texture = SDL_CreateTextureFromSurface(renderer, rule1Surface);
@@ -232,6 +250,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!rule1Texture || !rule2Texture || !rule3Texture || !rule4Texture) {
         printf("Failed to create rule texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect rule1Rect = {
@@ -266,6 +285,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!pinIconSurface) {
         printf("Failed to load icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* pinIconTexture = SDL_CreateTextureFromSurface(renderer, pinIconSurface);
@@ -273,6 +293,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!pinIconTexture) {
         printf("Failed to create icon texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect pinIconRect1 = {
@@ -308,6 +329,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!instructionSurface || !folderSurface) {
         printf("Failed to create instruction surface: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Texture* instructionTexture = SDL_CreateTextureFromSurface(renderer, instructionSurface);
@@ -317,6 +339,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!instructionTexture || !folderTexture) {
         printf("Failed to create instruction texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect instructionRect = {
@@ -337,6 +360,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!rightArrowIconSurface) {
         printf("Failed to load right arrow icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* rightArrowIconTexture = SDL_CreateTextureFromSurface(renderer, rightArrowIconSurface);
@@ -344,6 +368,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!rightArrowIconTexture) {
         printf("Failed to create right arrow icon texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect rightArrowIconRect1 = {
@@ -364,6 +389,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubButtonSurface) {
         printf("Failed to load GitHub icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* githubButtonTexture = SDL_CreateTextureFromSurface(renderer, githubButtonSurface);
@@ -371,6 +397,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubButtonTexture) {
         printf("Failed to create GitHub button texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect githubButtonRect = {
@@ -384,6 +411,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubTextSurface) {
         printf("Failed to load githubTextSurface: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* githubTextTexture = SDL_CreateTextureFromSurface(renderer, githubTextSurface);
@@ -391,6 +419,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubTextTexture) {
         printf("Failed to create GitHub text texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect githubTextRect = {
@@ -404,12 +433,14 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!bubbleFont) {
         printf("Failed to load bubbleFont: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Surface* bubbleSurface = IMG_Load("resources/assets/img/background/bubble.png");
 
     if (!bubbleSurface) {
         printf("Failed to load background image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* bubbleTexture = SDL_CreateTextureFromSurface(renderer, bubbleSurface);
@@ -417,6 +448,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!bubbleTexture) {
         printf("Failed to create bubble texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect bubbleRect = {
@@ -430,6 +462,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubCharacterSurface) {
         printf("Failed to load githubCharacterSurface: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* githubCharacterTexture = SDL_CreateTextureFromSurface(renderer, githubCharacterSurface);
@@ -437,6 +470,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!githubCharacterTexture) {
         printf("Failed to create githubCharacterTexture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect githubCharacterRect = {
@@ -450,6 +484,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextSurface1) {
         printf("Failed to load opinionTextSurface1: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* opinionTextTexture1 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface1);
@@ -457,6 +492,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextTexture1) {
         printf("Failed to load opinionTextTexture1: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Rect opinionTextRect1 = {
@@ -470,6 +506,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextSurface2) {
         printf("Failed to load opinionTextSurface2: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* opinionTextTexture2 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface2);
@@ -477,6 +514,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextTexture2) {
         printf("Failed to load opinionTextTexture2: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Rect opinionTextRect2 = {
@@ -490,6 +528,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextSurface3) {
         printf("Failed to load opinionTextSurface3: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* opinionTextTexture3 = SDL_CreateTextureFromSurface(renderer, opinionTextSurface3);
@@ -497,6 +536,7 @@ void displayHelpMenu(SDL_Renderer* renderer) {
 
     if (!opinionTextTexture3) {
         printf("Failed to load opinionTextTexture3: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Rect opinionTextRect3 = {
