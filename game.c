@@ -721,7 +721,7 @@ void displayGame(SDL_Renderer* renderer) {
 
             if (projectiles[i].active) {
 
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                SDL_SetRenderDrawColor(renderer, 7, 253, 234, 255);
                 SDL_RenderFillRect(renderer, &projectiles[i].rect);
 
             }
