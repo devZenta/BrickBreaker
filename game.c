@@ -170,6 +170,7 @@ void displayGame(SDL_Renderer* renderer) {
     };
 
     TTF_Font* buttonFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
+    TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/Indiana-Jonas-48ip.otf", 30);
 
     SDL_Color titleTextColor = {
         255,
@@ -318,6 +319,17 @@ void displayGame(SDL_Renderer* renderer) {
     SDL_Surface* loseIconSurface = IMG_Load("resources/assets/img/icons/game_over.png");
     SDL_Texture* loseIconTexture = SDL_CreateTextureFromSurface(renderer, loseIconSurface);
     SDL_FreeSurface(loseIconSurface);
+
+    SDL_Surface* shootMessageSurface = TTF_RenderText_Blended(footerFont, "Press SPACE to shoot", titleTextColor);
+    SDL_Texture* shootMessageTexture = SDL_CreateTextureFromSurface(renderer, shootMessageSurface);
+    SDL_FreeSurface(shootMessageSurface);
+
+    SDL_Rect shootMessageRect = {
+        .x = 310,
+        .y = SCREEN_HEIGHT - 75,
+        .w = shootMessageSurface->w,
+        .h = shootMessageSurface->h
+    };
 
     SDL_Surface* brickSurfaces[ROWS] = {
         IMG_Load("resources/assets/img/icons/green_brick.png"),
@@ -714,6 +726,7 @@ void displayGame(SDL_Renderer* renderer) {
         if (canShoot && !projectileUsed) {
 
             SDL_RenderCopy(renderer, crosshairIconTexture, NULL, &crosshairIconRect);
+            SDL_RenderCopy(renderer, shootMessageTexture, NULL, &shootMessageRect);
 
         }
 
