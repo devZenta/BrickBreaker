@@ -22,12 +22,14 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (TTF_Init() == -1) {
         printf("Failed to initialize TTF: %s\n", TTF_GetError());
+        return;
     }
 
     TTF_Font* font = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 100);
 
     if (!font) {
         printf("Failed to load font: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
@@ -35,7 +37,8 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* titleSurface = TTF_RenderText_Blended(font, "Settings", textColor);
 
     if (!titleSurface) {
-        printf("Failed to create title surface: %s\n", TTF_GetError());
+        printf("Failed to create title texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
@@ -43,6 +46,7 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
 
     if (!titleTexture) {
         printf("Failed to create title texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect titleRect = {
@@ -55,27 +59,37 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface *background_menu = IMG_Load("resources/assets/img/background/background_menu.jpg");
 
     if (!background_menu) {
+        SDL_DestroyTexture(titleTexture);
         printf("Failed to load background image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, background_menu);
     SDL_FreeSurface(background_menu);
 
     if (!texture) {
+        SDL_DestroyTexture(titleTexture);
         printf("Failed to create texture from surface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Surface *easy_level_surface = IMG_Load("resources/assets/img/levels/simple_level.png");
 
     if (!easy_level_surface) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
         printf("Failed to load easy level image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *easy_level_texture = SDL_CreateTextureFromSurface(renderer, easy_level_surface);
     SDL_FreeSurface(easy_level_surface);
 
     if (!easy_level_texture) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
         printf("Failed to create easy level texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect easyLevelRect = {
@@ -88,14 +102,22 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface *medium_level_surface = IMG_Load("resources/assets/img/levels/medium_level.png");
 
     if (!medium_level_surface) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
         printf("Failed to load medium level image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *medium_level_texture = SDL_CreateTextureFromSurface(renderer, medium_level_surface);
     SDL_FreeSurface(medium_level_surface);
 
     if (!medium_level_texture) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
         printf("Failed to create medium level texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect mediumLevelRect = {
@@ -108,14 +130,24 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface *hard_level_surface = IMG_Load("resources/assets/img/levels/hard_level.png");
 
     if (!hard_level_surface) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
         printf("Failed to load hard level image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *hard_level_texture = SDL_CreateTextureFromSurface(renderer, hard_level_surface);
     SDL_FreeSurface(hard_level_surface);
 
     if (!hard_level_texture) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
         printf("Failed to create hard level texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect hardLevelRect = {
@@ -128,14 +160,26 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface *back_button_surface = IMG_Load("resources/assets/img/buttons/back_button.png");
 
     if (!back_button_surface) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
         printf("Failed to load back button image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *back_button_texture = SDL_CreateTextureFromSurface(renderer, back_button_surface);
     SDL_FreeSurface(back_button_surface);
 
     if (!back_button_texture) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
         printf("Failed to create back button texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect backButtonRect = {
@@ -148,20 +192,43 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     TTF_Font* instructionsTextFont = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 32);
 
     if (!instructionsTextFont) {
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
         printf("Failed to load instructionsTextFont: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Surface* chooseDifficultySurface = TTF_RenderText_Blended(instructionsTextFont, "Please select difficulty :", textColor);
 
     if (!chooseDifficultySurface) {
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
         printf("Failed to create chooseDifficultySurface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Texture* chooseDifficultyTexture = SDL_CreateTextureFromSurface(renderer, chooseDifficultySurface);
     SDL_FreeSurface(chooseDifficultySurface);
 
     if (!chooseDifficultyTexture) {
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
         printf("Failed to create chooseDifficultyTexture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect chooseDifficultyRect = {
@@ -174,20 +241,49 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     TTF_Font* textLevelFont = TTF_OpenFont("resources/assets/fonts/winter_minie.ttf", 24);
 
     if (!textLevelFont) {
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
         printf("Failed to load textLevelFont: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Surface* easyTextSurface = TTF_RenderText_Blended(textLevelFont, "Easy", textColor);
 
     if (!easyTextSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
         printf("Failed to create easyTextSurface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Texture* easyTextTexture = SDL_CreateTextureFromSurface(renderer, easyTextSurface);
     SDL_FreeSurface(easyTextSurface);
 
     if (!easyTextTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
         printf("Failed to create easyTextTexture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect easyTextRect = {
@@ -200,14 +296,36 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* mediumTextSurface = TTF_RenderText_Blended(textLevelFont, "Medium", textColor);
 
     if (!mediumTextSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
         printf("Failed to create mediumTextSurface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Texture* mediumTextTexture = SDL_CreateTextureFromSurface(renderer, mediumTextSurface);
     SDL_FreeSurface(mediumTextSurface);
 
     if (!mediumTextTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
         printf("Failed to create mediumTextTexture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect mediumTextRect = {
@@ -220,14 +338,38 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* hardTextSurface = TTF_RenderText_Blended(textLevelFont, "Hard", textColor);
 
     if (!hardTextSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
         printf("Failed to create hardTextSurface: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Texture* hardTextTexture = SDL_CreateTextureFromSurface(renderer, hardTextSurface);
     SDL_FreeSurface(hardTextSurface);
 
     if (!hardTextTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
         printf("Failed to create hardTextTexture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect hardTextRect = {
@@ -241,7 +383,20 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* checkboxCheckedSurface = IMG_Load("resources/assets/img/icons/checkbox_checked.png");
 
     if (!checkboxUncheckedSurface || !checkboxCheckedSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
         printf("Failed to load checkbox images: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* checkboxUncheckedTexture = SDL_CreateTextureFromSurface(renderer, checkboxUncheckedSurface);
@@ -251,7 +406,20 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_FreeSurface(checkboxCheckedSurface);
 
     if (!checkboxUncheckedTexture || !checkboxCheckedTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
         printf("Failed to create checkbox textures: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect easyCheckboxRect = {
@@ -279,7 +447,22 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* volumeOffSurface = IMG_Load("resources/assets/img/buttons/volume_off_button.png");
 
     if (!volumeOnSurface || !volumeOffSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
         printf("Failed to load volume button images: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* volumeOnTexture = SDL_CreateTextureFromSurface(renderer, volumeOnSurface);
@@ -289,7 +472,22 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_FreeSurface(volumeOffSurface);
 
     if (!volumeOnTexture || !volumeOffTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
         printf("Failed to create volume button textures: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Surface* enableVolumeSurface = TTF_RenderText_Blended(instructionsTextFont, "Active volume :", textColor);
@@ -302,7 +500,24 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_FreeSurface(disableVolumeSurface);
 
     if (!enableVolumeTexture || !disableVolumeTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
         printf("Failed to create volume text textures: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect volumeTextRect = {
@@ -322,14 +537,52 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface *exit_button_surface = IMG_Load("resources/assets/img/buttons/exit_button.png");
 
     if (!exit_button_surface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
         printf("Failed to load exit button image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture *exit_button_texture = SDL_CreateTextureFromSurface(renderer, exit_button_surface);
     SDL_FreeSurface(exit_button_surface);
 
     if (!exit_button_texture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
         printf("Failed to create exit button texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect exitButtonRect = {
@@ -342,14 +595,54 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     SDL_Surface* iconDevSurface = IMG_Load("resources/assets/img/icons/coding.png");
 
     if (!iconDevSurface) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
+        SDL_DestroyTexture(exit_button_texture);
         printf("Failed to load dev icon image: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* iconDevTexture = SDL_CreateTextureFromSurface(renderer, iconDevSurface);
     SDL_FreeSurface(iconDevSurface);
 
     if (!iconDevTexture) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
+        SDL_DestroyTexture(exit_button_texture);
         printf("Failed to create dev icon texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect iconDevRect = {
@@ -362,20 +655,85 @@ void displaySettingsMenu(SDL_Renderer* renderer) {
     TTF_Font* footerFont = TTF_OpenFont("resources/assets/fonts/camcode.ttf", 30);
 
     if (!footerFont) {
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(iconDevTexture);
         printf("Failed to load footerFont: %s\n", TTF_GetError());
+        return;
     }
 
     SDL_Surface* textCreatorSurface = TTF_RenderText_Blended(footerFont, "created by zenta ", textColor);
 
     if (!textCreatorSurface) {
+        TTF_CloseFont(footerFont);
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(iconDevTexture);
         printf("Failed to load textCreatorSurface: %s\n", IMG_GetError());
+        return;
     }
 
     SDL_Texture* textCreatorTexture = SDL_CreateTextureFromSurface(renderer, textCreatorSurface);
     SDL_FreeSurface(textCreatorSurface);
 
     if (!textCreatorTexture) {
+        TTF_CloseFont(footerFont);
+        TTF_CloseFont(textLevelFont);
+        TTF_CloseFont(instructionsTextFont);
+        SDL_DestroyTexture(titleTexture);
+        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(easy_level_texture);
+        SDL_DestroyTexture(medium_level_texture);
+        SDL_DestroyTexture(hard_level_texture);
+        SDL_DestroyTexture(back_button_texture);
+        SDL_DestroyTexture(chooseDifficultyTexture);
+        SDL_DestroyTexture(easyTextTexture);
+        SDL_DestroyTexture(mediumTextTexture);
+        SDL_DestroyTexture(hardTextTexture);
+        SDL_DestroyTexture(checkboxUncheckedTexture);
+        SDL_DestroyTexture(checkboxCheckedTexture);
+        SDL_DestroyTexture(volumeOffTexture);
+        SDL_DestroyTexture(volumeOnTexture);
+        SDL_DestroyTexture(enableVolumeTexture);
+        SDL_DestroyTexture(disableVolumeTexture);
+        SDL_DestroyTexture(exit_button_texture);
+        SDL_DestroyTexture(iconDevTexture);
         printf("Failed to create creator text texture: %s\n", SDL_GetError());
+        return;
     }
 
     SDL_Rect textCreatorRect = {
